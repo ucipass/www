@@ -5,19 +5,24 @@ var users 	= require('./bin/users.js').router;	// Router for User Management
 
 
 
-
-function root(req,res){
-	res.render('index',{
-		title:"Login" ,
+app.post('/login' , auth.login ); //redirects to login page or original URL based on ?redir=
+app.post('/logout', auth.logout); //redirects to login page
+app.get( '/login' , (req,res)=>{
+	res.render('login',{
+		title:"Login Page" ,
+		user:req.user?req.user.id:null ,
+		message: "Unauthorized access is strictly prohibited!",
+		redir:req.query.redir });
+	}
+);
+app.get( '/'      , auth.alreadyLoggedIn, (req,res)=>{
+	res.render('home',{
+		title:"Home" ,
 		user:req.user?req.user.id:null ,
 		message: "Welcome!",
 		redir:req.query.redir });
 	}
-
-app.post('/login' , auth.login ); //redirects to login page or original URL based on ?redir=
-app.post('/logout', auth.logout); //redirects to login page
-app.get( '/login' , root);
-app.get( '/'      , root );
+);
 app.use( "/users" , auth.alreadyLoggedIn ,users)
 app.get( '/test'  , auth.alreadyLoggedIn ,(req,res) => {
 	res.render('test',{ user:req.user ? req.user.id : null })
