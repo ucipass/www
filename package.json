@@ -1,0 +1,46 @@
+{
+  "name": "www",
+  "version": "1.0.0",
+  "description": "Simple web server",
+  "main": "app.js",
+  "bin": {
+    "www": "auth.js"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ucipass/www.git"
+  },
+  "author": "ucipass",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ucipass/www/issues"
+  },
+  "homepage": "https://github.com/ucipass/www#readme",
+  "dependencies": {
+    "archiver": "^2.1.1",
+    "body-parser": "^1.18.3",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.16.3",
+    "express-session": "^1.15.6",
+    "fast-csv": "^2.4.1",
+    "geoip-lite": "^1.2.1",
+    "moment": "^2.22.1",
+    "morgan": "^1.9.0",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "pug": "^2.0.3",
+    "read": "^1.0.7",
+    "request-ip": "^2.0.2",
+    "scp2": "^0.5.0",
+    "serve-favicon": "^2.5.0",
+    "sessionstore": "^1.3.2",
+    "sqlite3": "^4.0.0",
+    "winston": "^2.4.2"
+  }
+}
