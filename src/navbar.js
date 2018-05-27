@@ -1,3 +1,5 @@
+import * as sio from './sio.js';
+
 let loggedIn = false
 let e_form = null
 let e_user = null
@@ -27,7 +29,7 @@ async function login(){
     let user = document.getElementById("user").value
     let pass = document.getElementById("pass").value
     console.log("username",user,"password",pass)
-    if ( await verifyLogin(user,pass)){
+    if ( await verifyLogin(user,pass) ){
         console.log("LOGIN SUCCESS!")
         e_user.classList.add("d-none")  //hidden
         e_pass.classList.add("d-none")  //hidden
@@ -52,9 +54,12 @@ async function logout(){
 }
 
 async function verifyLogin(user,pass){
-    if (user == "test" && pass == "test"){
+    let response = await sio.auth(user,pass)
+    if (response){
+        console.log("REMOTE AUTH SUCCESS",response)
         return true;
     }else{
+        console.log("REMOTE AUTH FAILURE",response)
         return false;
     }
 }

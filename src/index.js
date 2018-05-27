@@ -5,17 +5,14 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import bootstrap from 'bootstrap';
 import moment from 'moment';
 import Draw from './drawchart.js';
-import SIO from './sio.js';
+import * as sio from './sio.js';
 import * as navbar from './navbar.js';
 //import './style.css';
 
 window.onload = async function(){
-    navbar.setup()
-    let sio = new SIO('http://localhost:8080')
-    await sio.init()
-    sio.echo()
+  navbar.setup()
+  sio.init(window.location.hostname+":"+window.location.port).then(()=> sio.echo())
 
-
-    let chartSec = new Draw("chartSec")
-    let chartMin = new Draw("chartMin")
-  }
+  let chartSec = new Draw("chartSec")
+  let chartMin = new Draw("chartMin")
+}
