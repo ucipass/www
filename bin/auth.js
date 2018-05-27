@@ -45,7 +45,6 @@ passport.deserializeUser(function(id, done) {
 	})
 
 var auth = {}
-
 auth.alreadyLoggedIn = function(req, res, next) {
 	if (req.isAuthenticated()){
 		//console.log("AUTH - ALREADY LOGGED IN");
