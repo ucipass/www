@@ -26,9 +26,11 @@ class SIO{
                 try{
                     if(msg.username == "test"){
                         console.log("auth success",msg, new Date())
+                        socket.auth = true
                         callback(true)
                     }else{
                         console.log("auth fail",msg, new Date())
+                        socket.auth = false
                         callback(false)
                     }
                 }catch(e){
