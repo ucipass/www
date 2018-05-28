@@ -1,10 +1,15 @@
+var url = "http://localhost:3000"
 var path = require("path")
-var request = require("supertest")
+var supertest = require("supertest")
 var app = require(path.join(__dirname,"..","app.js"))
-var agent = request.agent("http://localhost:3000")
+var agent = supertest.agent(url)
 var request = require("request")
+var cookieParser = require('cookie-parser')
+const {promisify} = require('util');
+var log = require("../bin/logger.js")("moccha")
+log.transports.console.level = "debug"
 
-describe.only('Web Server Test', function(){
+describe('Web Server Test', function(){
     it("Login Authentication as admin", function(done){
         agent
         .post('/login')
@@ -20,7 +25,7 @@ describe.only('Web Server Test', function(){
             done()
         })
     })
-    it("Logged-in as admin", function(done){
+    it("Already Logged-in as admin", function(done){
         agent
         //.get('/')
         //.expect(302)
@@ -33,18 +38,60 @@ describe.only('Web Server Test', function(){
             done()
         })
     })
-    it.only("Cookie Test", function(done){
-        var j = request.jar()
-        url = 'http://127.0.0.1:3000/'
-        request({url: url, jar: j}, function () {
-            console.log("retreiving cookie")
-          var cookie_string = j.getCookieString(url); // "key1=value1; key2=value2; ..."
-          var cookies = j.getCookies(url);
-          cookies.forEach((cookie) => {
-              console.log(cookie.key,cookie.value)              
-          });
-          done()
-          // [{key: 'key1', value: 'value1', domain: "www.google.com", ...}, ...]
+    it("Session Cookie Test", function(done){
+        var jar = request.jar()
+        request({url: url, jar: jar}, function () {
+            var cookie_string = jar.getCookieString(url); // "key1=value1; key2=value2; ..."
+            cookies = jar.getCookies(url);
+            if ( ! cookies.length ) { done("NO COOKIES!");return}
+            cookies.forEach((cookie) => {
+                //console.log(cookie.key,cookie.value)
+                if (cookie.key == "connect.sid"){
+                    let signedSessionID = decodeURIComponent(cookie.value)
+                    let sessionID = cookieParser.signedCookie(signedSessionID,"SuperSecretKey123!")
+                    jar = request.jar()
+                    done()
+                    return
+                }else{
+                    jar = request.jar()
+                    done("Cookie Connect.sid not found!")
+                    return
+                }        
+            });
         })
+    })
+    it("Request POST authentication", async function(){
+        //await promisify(setTimeout)(2000)
+        let resolve,reject
+        let auth = new Promise((res,rej)=>{resolve=res;reject=rej})
+        var jar = request.jar()
+        request.post(
+            {
+                url:     url+"/login",
+                form:    { username: "test", password:"test" },
+                jar: jar
+            },function(err, response, body){
+                if (err) {
+                    log.error("AUTH Client Post Failure");
+                    reject("AUTH Client  Post Failure")
+                }
+                if (body.includes("/login")) {
+                    log.error("AUTH Client  Login Failure");
+                    reject("AUTH Client  Login Failure")
+                }
+                else{
+                    var cookie_string = jar.getCookieString(url);
+                    var cookies = jar.getCookies(url);
+                    cookies.forEach(item => {
+                        if(item.key == "connect.sid") {
+                            let key = decodeURIComponent(item.value)
+                            sessionID = require('cookie-parser').signedCookie(key,"SuperSecretKey123!")
+                        }
+                    });
+                    log.info("AUTH Client  Post Login Success with SID:",sessionID);
+                    resolve(true)
+                }
+            });
+        return auth   
     })
 })

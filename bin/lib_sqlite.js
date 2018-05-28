@@ -1,5 +1,5 @@
 var sqlite3 = require('sqlite3').verbose();
-var log = require('./logger.js').loggers.get('SQLITE');
+var log = require("./logger.js")("sqlite")
 var loglevel = 0;
 function logSuccess(success){ console.log("LogPromise SUCCESS:\n", loglevel<2? success : JSON.stringify(success,null,3)) ; return Promise.resolve(success)}
 function logError(error){ console.log("LogPromise ERROR:\n", JSON.stringify(error,null,3)) ; return Promise.reject(error)}

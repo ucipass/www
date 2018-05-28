@@ -1,4 +1,5 @@
-import * as sio from './sio.js';
+import * as sio from './sioclient.js';
+import * as cookies from "js-cookie"
 
 let loggedIn = false
 let e_form = null
@@ -8,7 +9,9 @@ let e_login = null
 let e_modalAlert = null
 let e_modalAlertText = null
 
-export function setup(){
+export function setup(alreadyLoggedIn){
+    loggedIn = alreadyLoggedIn
+    cookies.set("afterLoginURL",document.location.href, {expires:1})
     e_form = document.getElementById("loginForm")
     e_user = document.getElementById("user")
     e_pass = document.getElementById("pass")   
@@ -23,44 +26,54 @@ export function setup(){
             logout()
         }
     });
+    if (loggedIn) {
+        hideLoginBar()
+    }else {
+        showLoginBar()
+    }
+}
+
+function showLoginBar(){
+    loggedIn = false
+    e_user.classList.remove("d-none")  //not hidden
+    e_pass.classList.remove("d-none")  //not hidden
+    e_login.innerHTML = "Login"
+}
+function hideLoginBar(){
+    loggedIn = true  
+    e_user.classList.add("d-none")  //hidden
+    e_pass.classList.add("d-none")  //hidden
+    e_login.innerHTML = "Logout"
+    e_user.value = ""
+    e_pass.value = ""
 }
 
 async function login(){
     let user = document.getElementById("user").value
     let pass = document.getElementById("pass").value
-    console.log("username",user,"password",pass)
-    if ( await verifyLogin(user,pass) ){
-        console.log("LOGIN SUCCESS!")
-        e_user.classList.add("d-none")  //hidden
-        e_pass.classList.add("d-none")  //hidden
-        e_login.innerHTML = "Logout"
-        e_user.value = ""
-        e_pass.value = ""
-        loggedIn = true
+    //console.log("username",user,"password",pass)
+    if ( await sio.login(user,pass) ){
+        console.log("Logged in as user:",user)
+        hideLoginBar()
         return true
     }else{
-        console.log("LOGIN FAILURE!")
+        console.log("Login failed as user:",user)
+        showLoginBar()
         alert("Login Failure!")
         return false
     }
 }
 
 async function logout(){
-    loggedIn = false
-    e_user.classList.remove("d-none")  //hidden
-    e_pass.classList.remove("d-none")  //hidden
-    e_login.innerHTML = "Login"
-    console.log("LOGOUT SUCCESS!")
-}
-
-async function verifyLogin(user,pass){
-    let response = await sio.auth(user,pass)
-    if (response){
-        console.log("REMOTE AUTH SUCCESS",response)
-        return true;
+    if ( await sio.logout() ){
+        console.log("Logged out!")
+        showLoginBar()
+        return true
     }else{
-        console.log("REMOTE AUTH FAILURE",response)
-        return false;
+        console.log("Logout Failure!")
+        alert("Logout Failure!")
+        showLoginBar()
+        return false
     }
 }
 

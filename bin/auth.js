@@ -1,8 +1,8 @@
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var app = require('./www.js').app;
-var log = require('./logger.js').loggers.get('AUTH');
-
+var log = require("./logger.js")("auth")
+log.transports.console.level = "info"
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -65,7 +65,7 @@ auth.login = function(req, res, next) {
 				return next(err); //If error return next with error
 				}				                    
 			// ONCE LOGING IS COMPLETE!!!!
-			log.info("authenticate - SUCCESS: User:",user,"IP:",req.clientIp)
+			log.info("Passport  auth success user:",user.id,"IP:",req.clientIp)
 			return res.redirect(req.body.redir ? req.body.redir : "/");
 			});
 			})(req, res, next);												// Go to next function

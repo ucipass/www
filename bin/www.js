@@ -22,9 +22,11 @@ app.use(function(req,res,next){// Adds req.clientCountry;
 	else{req.clientCountry="XX"}
 	next()
 	}) 
-	
+
+			
 // LOGGING
-var log = require('./logger.js').loggers.get('WWW');
+var log = require("./logger.js")("www")
+log.transports.console.level = "error"
 log.stream =   { write: function(message, encoding) {
 	if (message.indexOf(' 404 ') == -1) log.info(message.trim())
 	else log.error(message.trim())
@@ -57,4 +59,5 @@ module.exports.mySession	= mySession;	//used by auth.js
 
 server.listen(3000, function () {
         console.log('Node JS listening on port 3000!');
-        });
+		});
+var sio = require('./sio.js');

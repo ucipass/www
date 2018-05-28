@@ -17,13 +17,15 @@
                 "--colors",
                 "${workspaceFolder}/test"
             ],
-            "internalConsoleOptions": "openOnSessionStart"
+            "internalConsoleOptions": "openOnSessionStart",
+            "outputCapture": "std"
         },
         {
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
-            "program": "${workspaceRoot}/app.js"
+            "program": "${workspaceRoot}/app.js",
+            "outputCapture": "std"
         },
         {
             "type": "node",

@@ -16,7 +16,7 @@ att.filter.not:		boolean for NOT like '%att.filter.col#'
 att.filter.limit:	String for limiting the results
 *************************************************************************/
 var path = require("path")
-var log = require('./logger.js').loggers.get('USERS');
+var log = require("./logger.js")("users")
 var dbname = path.join(__dirname, "../db/", "users.db")
 var JSONData = require('./jsondata.js');
 var ioData = new JSONData();

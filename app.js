@@ -1,10 +1,6 @@
-var path	= require("path")
 var app     = require('./bin/www.js').app		// Express.js
 var auth 	= require('./bin/auth.js');			// Authentication middleware using Passport (using "app")
 var users 	= require('./bin/users.js').router;	// Router for User Management
-var server = require('./bin/www.js').server
-var SIO = require('./bin/sio.js');
-var sio = new SIO({server:server, datafn: (data) => {console.log("Socket.io Incoming data:",data)} })
 
 app.post('/login' , auth.login ); //redirects to login page or original URL based on ?redir=
 app.post('/logout', auth.logout); //redirects to login page
