@@ -116,8 +116,6 @@ function read_db(){
 		fnSelectFill($('#select-user-pwd'),getUserTable());
 	});
 }
-
-
 function fnSelectFill(element,data){
 	while (element[0].firstChild) {	element[0].removeChild(element[0].firstChild);} // REMOVE ALL CHILD OF ELEMENT
 	var selecttable = []
@@ -127,21 +125,18 @@ function fnSelectFill(element,data){
 	}
 	element.select2({	data: selecttable	});
 }
-
 function add_user(user,pwd){
 	var ioData = new JSONData(username,"users",{cmd:"user_add",id:user,password:pwd});
 	ioData.post(function(json){
 		console.log(json);read_db();
 	});
 }
-
 function del_user(user){
 	var ioData = new JSONData(username,"users",{cmd:"user_del",id:user});
 	ioData.post(function(json){
 		console.log(json);
 		read_db();});
 }
-
 function pwd_user(user,pwd){
 	var ioData = new JSONData(username,"users",{cmd:"user_pwd",id:user,password:pwd});
 	ioData.post(function(json){
