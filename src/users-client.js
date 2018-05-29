@@ -6,79 +6,21 @@ import bootstrap from 'bootstrap';
 import moment from 'moment';
 import * as sio from './sioclient.js';
 import * as navbar from './navbar.js';
-//import './style.css';
-import 'datatables.net'
-import 'datatables.net-bs4'
-//import dynDatatables from './dynDatatables.js'
+import dt from 'datatables.net-bs4';
+import 'datatables.net-dt/css/jquery.dataTables.css';
+import 'datatables.net-bs4/css/dataTables.bootstrap4.css';
+import 'select2';                       // globally assign select2 fn to $ element
+import 'select2/dist/css/select2.css';  // optional if you have css loader
 import JSONData from './jsondata.js'
 import './users-client.js'
 
 let username = "test"
+var usersTable =null
 window.onload = async function(){
 	let alreadyLoggedIn = await sio.init(window.location.hostname+":"+window.location.port)
 	navbar.setup(alreadyLoggedIn)
-  
-
-  }
-var curModalRow = [];
-//var mainTable = new dynDatatables();
-
-
-function read_db(isNewTable){
-	var ioData = new JSONData(username,"users",{cmd:"user_list"});
-	ioData.post(function(json){
-		function getUserTable(){
-			var s=['<user>'];
-			for( var i=0; i<json.data.attributes.data.table.length; i++ ){ s.push(json.data.attributes.data.table[i][0]); }
-			return s;
-			console.log(s);
-		}
-		if (isNewTable){
-			console.log("new table")
-			//mainTable.init('container1','container2',json.data.attributes.data);	
-		}else{
-			console.log("not new table")
-			//mainTable.table.clear().draw();
-			//mainTable.table.rows.add(json.data.attributes.data.table);
-			//mainTable.table.draw();		
-		}
-			
-		//fnSelectFill($('#select-user-del'),getUserTable());
-		//fnSelectFill($('#select-user-pwd'),getUserTable());
-	});
-}
-
-/*
-function fnSelectFill(element,data){
-	while (element[0].firstChild) {	element[0].removeChild(element[0].firstChild);} // REMOVE ALL CHILD OF ELEMENT
-	var selecttable = []
-	for(var x=0; x< data.length ; x++){
-		if (data[x].constructor === Array){selecttable.push({id: data[x][0], text: data[x][0]});}
-		else {selecttable.push({id: data[x], text: data[x]});}
-		}
-	element.select2({	data: selecttable	});
-	}
-*/
-function add_user(user,pwd){
-	var ioData = new JSONData(username,"users",{cmd:"user_add",id:user,password:pwd});
-	ioData.post(function(json){console.log(json);read_db(0);});
-	}
-
-function del_user(user){
-	var ioData = new JSONData(username,"users",{cmd:"user_del",id:user});
-	ioData.post(function(json){console.log(json);read_db(0);});
-	}
-
-function pwd_user(user,pwd){
-	var ioData = new JSONData(username,"users",{cmd:"user_pwd",id:user,password:pwd});
-	ioData.post(function(json){console.log(json)});
-	}
-	
-// Create the filter fields on filter form
-$( document ).ready(function() {
-	console.log( "ready!" );
 	// FILL THE SELECT FIELDS (DB,TABLES, LIMIT) THEN CREATE TABLE
-	read_db(true);
+	read_db();
 	// EVENT HANDLING
 	$('#button-modal-add-user').on('click', function (e) {
 		e.preventDefault();
@@ -138,5 +80,75 @@ $( document ).ready(function() {
 		
 		
 		});
+
+  }
+var curModalRow = [];
+//var mainTable = new dynDatatables();
+
+
+
+function read_db(){
+	var ioData = new JSONData(username,"users",{cmd:"user_list"});
+	ioData.post(function(json){
+		function getUserTable(){
+			var s=['<user>'];
+			for( var i=0; i<json.data.attributes.data.table.length; i++ ){ s.push(json.data.attributes.data.table[i][0]); }
+			return s;
+			console.log(s);
+		}
+		let tableExists = $.fn.dataTable.isDataTable( '#users-table' )
+		if (tableExists){
+			usersTable.destroy();
+			$('#users-table').empty()
+			usersTable = $('#users-table').DataTable({
+				data:json.data.attributes.data.table,
+				columns:json.data.attributes.data.columns.map((item)=>{
+					return { title:item}
+				})
+			})
+		}else{
+			usersTable = $('#users-table').DataTable({
+				data:json.data.attributes.data.table,
+				columns:json.data.attributes.data.columns.map((item)=>{
+					return { title:item}
+				})
+			})	
+		}
+			
+		fnSelectFill($('#select-user-del'),getUserTable());
+		fnSelectFill($('#select-user-pwd'),getUserTable());
+	});
+}
+
+
+function fnSelectFill(element,data){
+	while (element[0].firstChild) {	element[0].removeChild(element[0].firstChild);} // REMOVE ALL CHILD OF ELEMENT
+	var selecttable = []
+	for(var x=0; x< data.length ; x++){
+		if (data[x].constructor === Array){selecttable.push({id: data[x][0], text: data[x][0]});}
+		else {selecttable.push({id: data[x], text: data[x]});}
+		}
+	element.select2({	data: selecttable	});
+	}
+
+function add_user(user,pwd){
+	var ioData = new JSONData(username,"users",{cmd:"user_add",id:user,password:pwd});
+	ioData.post(function(json){
+		console.log(json);read_db();
+	});
+}
+
+function del_user(user){
+	var ioData = new JSONData(username,"users",{cmd:"user_del",id:user});
+	ioData.post(function(json){
+		console.log(json);
+		read_db();});
+}
+
+function pwd_user(user,pwd){
+	var ioData = new JSONData(username,"users",{cmd:"user_pwd",id:user,password:pwd});
+	ioData.post(function(json){
+		console.log(json)
+	});
+}
 	
-});

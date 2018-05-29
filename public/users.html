@@ -7,6 +7,14 @@
     <script src="users.js"></script>
   </head>
   <body>
+
+
+
+
+
+
+
+
     <div>
       <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top" role="navigation">
           <a class="navbar-brand mr-auto" href="#">Home</a>
@@ -28,14 +36,21 @@
         </div>
       </div>
     </div>
+
+
+
       <div class="container-fluid">
         <div class="row"><button class="btn btn-primary" style="margin-top:5px; margin-left:5px;" id="button-modal-add-user">Add User</button><button class="btn btn-primary" style="margin-top:5px; margin-left:5px;" id="button-modal-del-user">Delete User</button><button class="btn btn-primary"
                 style="margin-top:5px; margin-left:5px;" id="button-modal-pwd-user">Change Password</button></div>
         <div class="row">
-            <div id="container1"></div>
-            <div id="container2"></div>
+        <div id="container1">
+                <table id="users-table" class="display" width="100%"></table>
+        </div>
+        <div id="container2"></div>
         </div>
     </div>
+
+
     <div>
         <div class="modal fade" id="modal-add-user" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true" style="display: none;">
             <div class="modal-dialog">
