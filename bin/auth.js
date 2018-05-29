@@ -33,15 +33,15 @@ passport.use(new LocalStrategy(function(username, password, done) {  // THIS MUS
 	}))
 
 passport.serializeUser(function(user, done) {
-	log.debug("Serialize User:",user);		// THIS IS WHERE THE user id is supposed to be put in an external session db)
+	log.debug("Serialize:",user);		// THIS IS WHERE THE user id is supposed to be put in an external session db)
 	return done(null, user.id);
 	})
 
 passport.deserializeUser(function(id, done) {
 	//console.log("AUTH - DeSerialize User:", id);
-	log.debug("DeSerialize User:" + id);
+	log.debug("DeSerialize:" + id);
 	//if (!myusers[id]) {return done(null, false);}
-	return done(null, {id:id});    // THIS IS WHERE THE user id is supposed to be removed from external session db)
+	return done(null, {id:id});    // THIS IS WHERE THE user id is supposed to be checked against an external session db)
 	})
 
 var auth = {}

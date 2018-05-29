@@ -6,7 +6,7 @@ import bootstrap from 'bootstrap';
 import moment from 'moment';
 import * as sio from './sioclient.js';
 import * as navbar from './navbar.js';
-import dt from 'datatables.net-bs4';
+import 'datatables.net-bs4';
 import 'datatables.net-dt/css/jquery.dataTables.css';
 import 'datatables.net-bs4/css/dataTables.bootstrap4.css';
 import 'select2';                       // globally assign select2 fn to $ element

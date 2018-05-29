@@ -1,4 +1,5 @@
 const path = require('path');
+var HtmlWebpackPlugin = require('html-webpack-plugin'); // This is for watch mode
 
 module.exports = {
     entry:{
@@ -10,6 +11,7 @@ module.exports = {
         filename: '[name].js',
         path: path.resolve(__dirname, 'public')
     },
+    watch: true,
     module: {
         rules: [
             {
@@ -32,5 +34,21 @@ module.exports = {
                 ]
             }
         ]
-    }
+    },
+    plugins: [
+        new HtmlWebpackPlugin({
+            hash: true,
+            inject: 'head',
+            template: 'ejs-compiled-loader!./src/root.ejs',
+            chunks: ['root'],
+            filename: '/root.html' //relative to root of the application
+        }),
+        new HtmlWebpackPlugin({
+            hash: true,
+            inject: 'head',
+            template: 'ejs-compiled-loader!./src/login.ejs',
+            chunks: ['login'],
+            filename: '/login.html' //relative to root of the application
+        })
+   ]
 };

@@ -7,11 +7,25 @@ var path = require('path');
 var favicon = require('serve-favicon');
 var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
-var session = require('express-session');
-var sessionstore = require('sessionstore');
-var mySessionStore = new sessionstore.createSessionStore();  // Sessionstore in memory
 var secretKey = "SuperSecretKey123!" ;
-var mySession = {store: mySessionStore,  secret: secretKey,  saveUninitialized: true, resave: true};
+var session = require('express-session');
+// MEMORY SESSION STORE
+//var sessionstore = require('sessionstore');
+//var mySessionStore = new sessionstore.createSessionStore();  // Sessionstore in memory
+/*var mySession = {
+	store: mySessionStore,  
+	secret: secretKey,  
+	saveUninitialized: true, 
+	resave: true
+};*/
+// SQLITE3 SESSION STORE
+var SQLiteStore = require('connect-sqlite3')(session); // Optional sessionstore
+var mySQLiteStore = new SQLiteStore({db: 'sessions.db', dir: path.join( __dirname, "..","db") })
+var mySession = { store: mySQLiteStore,
+	secret: secretKey,
+	saveUninitialized: true, 
+	resave: true,
+	cookie: { httpOnly: true, maxAge:  24 * 60 * 60 * 1000 } /* 1 day*/  }
 
 // GEO IP
 var requestIp = require('request-ip');

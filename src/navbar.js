@@ -59,19 +59,20 @@ async function login(){
     if ( await sio.login(user,pass) ){
         showLogoutBar()
         console.log("Logged in as user:",user)
+        window.location.href = "http://localhost:3000/root.html"
         return true
     }else{
         showLoginBar()
         console.log("Login failed as user:",user)
-        alert("Login Failure!")
+        //alert("Login Failure!")
+        window.location.href = "http://localhost:3000/login.html"
         return false
     }
 }
 
 async function logout(){
     await sio.logout()
-    location.reload()
-
+    window.location.href = "http://localhost:3000/root.html"
 }
 
 function alert(text){
