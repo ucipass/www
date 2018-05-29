@@ -6,6 +6,7 @@ let e_form = null
 let e_user = null
 let e_pass = null
 let e_login = null
+let e_logout = null
 let e_modalAlert = null
 let e_modalAlertText = null
 
@@ -16,6 +17,7 @@ export function setup(alreadyLoggedIn){
     e_user = document.getElementById("user")
     e_pass = document.getElementById("pass")   
     e_login = document.getElementById("login")
+    e_logout = document.getElementById("logout")
     e_modalAlert = document.getElementById("modalAlert")
     e_modalAlertText = document.getElementById("modalAlertText")
     e_form.addEventListener("submit", function(event){
@@ -27,7 +29,7 @@ export function setup(alreadyLoggedIn){
         }
     });
     if (loggedIn) {
-        hideLoginBar()
+        showLogoutBar()
     }else {
         showLoginBar()
     }
@@ -35,15 +37,17 @@ export function setup(alreadyLoggedIn){
 
 function showLoginBar(){
     loggedIn = false
+    e_login.classList.remove("d-none")  //not hidden
+    e_logout.classList.add("d-none")  // hidden
     e_user.classList.remove("d-none")  //not hidden
     e_pass.classList.remove("d-none")  //not hidden
-    e_login.innerHTML = "Login"
 }
-function hideLoginBar(){
+function showLogoutBar(){
     loggedIn = true  
+    e_login.classList.add("d-none")  //not hidden
+    e_logout.classList.remove("d-none")  // hidden
     e_user.classList.add("d-none")  //hidden
     e_pass.classList.add("d-none")  //hidden
-    e_login.innerHTML = "Logout"
     e_user.value = ""
     e_pass.value = ""
 }
@@ -53,28 +57,21 @@ async function login(){
     let pass = document.getElementById("pass").value
     //console.log("username",user,"password",pass)
     if ( await sio.login(user,pass) ){
+        showLogoutBar()
         console.log("Logged in as user:",user)
-        hideLoginBar()
         return true
     }else{
-        console.log("Login failed as user:",user)
         showLoginBar()
+        console.log("Login failed as user:",user)
         alert("Login Failure!")
         return false
     }
 }
 
 async function logout(){
-    if ( await sio.logout() ){
-        console.log("Logged out!")
-        showLoginBar()
-        return true
-    }else{
-        console.log("Logout Failure!")
-        alert("Logout Failure!")
-        showLoginBar()
-        return false
-    }
+    await sio.logout()
+    location.reload()
+
 }
 
 function alert(text){
