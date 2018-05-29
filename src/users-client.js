@@ -83,9 +83,6 @@ window.onload = async function(){
 
   }
 var curModalRow = [];
-//var mainTable = new dynDatatables();
-
-
 
 function read_db(){
 	var ioData = new JSONData(username,"users",{cmd:"user_list"});
@@ -127,9 +124,9 @@ function fnSelectFill(element,data){
 	for(var x=0; x< data.length ; x++){
 		if (data[x].constructor === Array){selecttable.push({id: data[x][0], text: data[x][0]});}
 		else {selecttable.push({id: data[x], text: data[x]});}
-		}
-	element.select2({	data: selecttable	});
 	}
+	element.select2({	data: selecttable	});
+}
 
 function add_user(user,pwd){
 	var ioData = new JSONData(username,"users",{cmd:"user_add",id:user,password:pwd});
