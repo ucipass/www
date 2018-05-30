@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Home</title>
+  <script type="text/javascript" src="charts.js?aa9f7c26fbf404dce015"></script></head>
+  <body>
+        <div>
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top" role="navigation">
+          <div class="collapse navbar-collapse" id="navbarNavDropdown">
+              <ul class="navbar-nav">
+                <li>
+                  <a class="nav-link mr-auto" href="/root.html">Home</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Menu
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                      <a class="dropdown-item" href="/charts.html">Charts</a>
+                      <a class="dropdown-item" href="/users.html">Users</a>
+                    </div>
+                </li>
+              </ul>
+          </div>
+          <form id="loginForm" class="ml-auto form-inline my-2 my-lg-0">
+              <input id='user' class="form-control mr-sm-2 d-none" type="text" placeholder="username" aria-label="username">
+              <input id='pass' class="form-control mr-sm-2 d-none" type="password" placeholder="password" aria-label="password">
+              <button id='login' class="btn btn-outline-success my-2 my-sm-0 d-none" type="submit">Login</button>
+              <button id='logout' class="btn btn-outline-success my-2 my-sm-0 d-none" type="submit">Logout</button>
+          </form>
+      </nav>
+    </div>
+    <div class="modal fade" id="modalAlert" role="dialog">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-body alert-danger">
+            <p id="modalAlertText">Alert!</p>
+            <button type="button" class="btn btn-secondary ml-auto" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+        <div>
+      <div id="chartSec" style="width: 1000px; height: 350px;"></div>
+      <div id="chartMin" style="width: 1000px; height: 350px;"></div>
+      <div id="chartHour" style="width: 1000px; height: 350px;"></div>
+      <div id="chartDay" style="width: 1000px; height: 350px;"></div>
+      <div id="chartWeek" style="width: 1000px; height: 350px;"></div>      
+    </div>
+
+
+  </body>
+</html>

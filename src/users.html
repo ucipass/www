@@ -1,0 +1,64 @@
+    <div class="container-fluid">
+        <div class="row">
+            <button class="btn btn-primary" style="margin-bottom:5px;margin-top:5px; margin-left:5px;" id="button-modal-add-user">Add User</button>
+            <button class="btn btn-primary" style="margin-bottom:5px;margin-top:5px; margin-left:5px;" id="button-modal-del-user">Delete User</button>
+            <button class="btn btn-primary" style="margin-bottom:5px;margin-top:5px; margin-left:5px;" id="button-modal-pwd-user">Change Password</button></div>
+        <div class="row">
+            <table id="users-table" class="display" width="100%"></table>
+        </div>
+    </div>
+    <div id= "div-modal-add-user">
+        <div class="modal fade" id="modal-add-user" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header" align="center">
+                        <h3>Add User</h3>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form">
+                            <div class="form-group"><label for="inp-add-user">Username</label><input class="form-control" type="text" name="inp-add-user" id="inp-add-user" placeholder="Enter Username" /></div>
+                            <div class="form-group"><label for="inp-add-pwd1">Password</label><input class="form-control" type="password" name="inp-add-pwd1" id="inp-add-pwd1" placeholder="Password" /></div>
+                            <div class="form-group"><label for="inp-add-pwd2">Confirm Password</label><input class="form-control" type="password" name="inp-add-pwd2" id="inp-add-pwd2" placeholder="Confirm Password" /></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer"><button class="btn btn-primary" style="margin-left:5px;" id="button-modal-add-user-add">Add User</button><button class="btn btn-primary" style="margin-left:5px;" id="button-modal-add-user-clo">Close</button></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id= "div-modal-del-user">
+        <div class="modal fade" id="modal-del-user" tabindex="-2" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header" align="center">
+                        <h2>Delete User</h2>
+                    </div>
+                    <div class="modal-body"><label for="select-user-del">User ID</label>
+                        <div class="form">
+                            <div class="form-group"><select class="select form-control" id="select-user-del"></select></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer"><button class="btn btn-primary" style="margin-left:5px;" id="button-modal-del-user-del">Delete User</button><button class="btn btn-primary" style="margin-left:5px;" id="button-modal-del-user-clo">Close</button></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id= "div-modal-pwd-user">
+        <div class="modal fade" id="modal-pwd-user" tabindex="-3" role="dialog" aria-labelledby="myModalLabel3" aria-hidden="true" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header" align="center">
+                        <h2>Change Password</h2>
+                    </div>
+                    <div class="modal-body"><label for="select-user-pwd">User ID</label>
+                        <div class="form">
+                            <div class="form-group"><select class="select form-control" id="select-user-pwd"></select></div>
+                            <div class="form-group"><label for="inp-pwd-pwd1">Password</label><input class="form-control" type="password" name="inp-pwd-pwd1" id="inp-pwd-pwd1" placeholder="Password" /></div>
+                            <div class="form-group"><label for="inp-pwd-pwd2">Confirm Password</label><input class="form-control" type="password" name="inp-pwd-pwd2" id="inp-pwd-pwd2" placeholder="Confirm Password" /></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer"><button class="btn btn-primary" style="margin-left:5px;" id="button-modal-pwd-user-pwd">Change Password</button><button class="btn btn-primary" style="margin-left:5px;" id="button-modal-pwd-user-clo">Close</button></div>
+                </div>
+            </div>
+        </div>
+    </div>

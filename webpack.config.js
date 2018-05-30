@@ -5,7 +5,10 @@ module.exports = {
     entry:{
         root: './src/root.js',
         login: './src/login.js',
-        users: './src/users-client.js'
+        sioclient: './src/sioclient.js',
+        charts: './src/charts.js',
+        users: './src/users.js',
+        clock: './src/clock.js'
     },
     output: {
         filename: '[name].js',
@@ -28,7 +31,7 @@ module.exports = {
                     {
                         loader: 'file-loader',
                         options: {
-                          name: './img/[name].[hash].[ext]'
+                          name: './images/[name].[hash].[ext]'
                         }
                       }
                 ]
@@ -39,16 +42,34 @@ module.exports = {
         new HtmlWebpackPlugin({
             hash: true,
             inject: 'head',
-            template: 'ejs-compiled-loader!./src/root.ejs',
-            chunks: ['root'],
-            filename: '/root.html' //relative to root of the application
+            title: 'Charts',
+            template: 'ejs-compiled-loader!./src/charts.ejs',
+            chunks: ['charts'],
+            filename: 'charts.html' //relative to root of the application
         }),
         new HtmlWebpackPlugin({
             hash: true,
             inject: 'head',
+            title: 'Users',
+            template: 'ejs-compiled-loader!./src/users.ejs',
+            chunks: ['users'],
+            filename: 'users.html' //relative to root of the application
+        }),
+        new HtmlWebpackPlugin({
+            hash: true,
+            inject: 'head',
+            title: 'Login',
             template: 'ejs-compiled-loader!./src/login.ejs',
             chunks: ['login'],
-            filename: '/login.html' //relative to root of the application
+            filename: 'login.html' //relative to root of the application
+        }),
+        new HtmlWebpackPlugin({
+            hash: true,
+            inject: 'head',
+            title: 'Home',
+            template: 'ejs-compiled-loader!./src/root.ejs',
+            chunks: ['clock',"root"],
+            filename: 'root.html' //relative to root of the application
         })
-   ]
+    ]
 };

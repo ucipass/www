@@ -3,12 +3,27 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Home</title>
-  <script type="text/javascript" src="node/www/public/login.js?c5f6343d04be8b855e59"></script></head>
+    <title>Login</title>
+  <script type="text/javascript" src="login.js?aa9f7c26fbf404dce015"></script></head>
   <body>
-    <div>
+        <div>
       <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top" role="navigation">
-          <a class="navbar-brand mr-auto" href="#">HOME</a>
+          <div class="collapse navbar-collapse" id="navbarNavDropdown">
+              <ul class="navbar-nav">
+                <li>
+                  <a class="nav-link mr-auto" href="/root.html">Home</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Menu
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                      <a class="dropdown-item" href="/charts.html">Charts</a>
+                      <a class="dropdown-item" href="/users.html">Users</a>
+                    </div>
+                </li>
+              </ul>
+          </div>
           <form id="loginForm" class="ml-auto form-inline my-2 my-lg-0">
               <input id='user' class="form-control mr-sm-2 d-none" type="text" placeholder="username" aria-label="username">
               <input id='pass' class="form-control mr-sm-2 d-none" type="password" placeholder="password" aria-label="password">
@@ -27,18 +42,6 @@
         </div>
       </div>
     </div>
-
-
-    </div>
-
-        <div>
-      <div id="chartSec" style="width: 1000px; height: 350px;"></div>
-      <div id="chartMin" style="width: 1000px; height: 350px;"></div>
-      <div id="chartHour" style="width: 1000px; height: 350px;"></div>
-      <div id="chartDay" style="width: 1000px; height: 350px;"></div>
-      <div id="chartWeek" style="width: 1000px; height: 350px;"></div>      
-    </div>
-
-
+    <H1>PLEASE LOGIN</H1>
   </body>
 </html>
