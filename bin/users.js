@@ -15,7 +15,8 @@ att.filter.col:		Array Column filter strings used with like '%att.filter.col#'
 att.filter.not:		boolean for NOT like '%att.filter.col#'
 att.filter.limit:	String for limiting the results
 *************************************************************************/
-var path = require("path")
+var path    = require("path")
+var dir     = path.join( require('app-root-path').path, "dist","users")
 var log = require("./logger.js")("users")
 var dbname = path.join(__dirname, "../db/", "users.db")
 var JSONData = require('./jsondata.js');
@@ -24,9 +25,10 @@ var express = require('express');
 var router = express.Router();
 var db = require('./lib_sqlite.js');
 
-router.get("/", function (req, res) {
-	res.render('users',{title:"Users" ,user:req.user?req.user.id:null ,message: "Users",redir:req.query.redir });
-	});
+//router.get("/", function (req, res) {
+//	res.render('users',{title:"Users" ,user:req.user?req.user.id:null ,message: "Users",redir:req.query.redir });
+//	});
+router.get( '/'  , (req,res)=>{ res.sendFile(path.join(dir,'index.html'))})
 
 router.post("/", users); 
 

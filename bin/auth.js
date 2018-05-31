@@ -2,7 +2,7 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var app = require('./www.js').app;
 var log = require("./logger.js")("auth")
-log.transports.console.level = "info"
+log.transports.console.level = "debug"
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -52,6 +52,7 @@ auth.alreadyLoggedIn = function(req, res, next) {
 		}
 	log.error("AUTH - NOT LOGGED IN, REDIRECTING TO LOGIN!","IP:",req.clientIp);
 	res.redirect('/login?redir='+req.originalUrl);
+	//res.redirect('/login.html')
 	}
 
 auth.login = function(req, res, next) {
@@ -76,6 +77,7 @@ auth.logout = function(req, res, next) {
 	req.logOut();										// logout
 	req.session.destroy(function(){						// delete the auth session 
 		res.redirect('/login?redir='+req.body.redir);	// redir is sent from the logout header via JSON
+		//res.redirect('/login.html');	// redir is sent from the logout header via JSON
 		});								
 	}
 

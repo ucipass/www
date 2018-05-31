@@ -1,18 +1,19 @@
 const path = require('path');
+const rootDir = path.join( __dirname, "dist","public","js")
 var HtmlWebpackPlugin = require('html-webpack-plugin'); // This is for watch mode
-
+var CopyWebpackPlugin =  require('copy-webpack-plugin');
 module.exports = {
     entry:{
-        root: './src/root.js',
-        login: './src/login.js',
-        sioclient: './src/sioclient.js',
-        charts: './src/charts.js',
-        users: './src/users.js',
-        clock: './src/clock.js'
+        "charts": './src/charts.js',
+        "users": './src/users.js',
+        'root': './src/root.js',
+        "login": './src/login.js',
+        "sioclient": './src/sioclient.js',
+        "clock": './src/clock.js'
     },
     output: {
-        filename: '[name].js',
-        path: path.resolve(__dirname, 'public')
+        filename: '[name][hash].js',
+        path: rootDir
     },
     watch: true,
     module: {
@@ -31,7 +32,7 @@ module.exports = {
                     {
                         loader: 'file-loader',
                         options: {
-                          name: './images/[name].[hash].[ext]'
+                          name: '../../public/images/[name].[hash].[ext]'
                         }
                       }
                 ]
@@ -45,7 +46,7 @@ module.exports = {
             title: 'Charts',
             template: 'ejs-compiled-loader!./src/charts.ejs',
             chunks: ['charts'],
-            filename: 'charts.html' //relative to root of the application
+            filename: '../../charts/index.html' //relative to root of the application
         }),
         new HtmlWebpackPlugin({
             hash: true,
@@ -53,7 +54,7 @@ module.exports = {
             title: 'Users',
             template: 'ejs-compiled-loader!./src/users.ejs',
             chunks: ['users'],
-            filename: 'users.html' //relative to root of the application
+            filename: '../../users/index.html' //relative to root of the application
         }),
         new HtmlWebpackPlugin({
             hash: true,
@@ -61,7 +62,7 @@ module.exports = {
             title: 'Login',
             template: 'ejs-compiled-loader!./src/login.ejs',
             chunks: ['login'],
-            filename: 'login.html' //relative to root of the application
+            filename: '../../login.html' //relative to root of the application
         }),
         new HtmlWebpackPlugin({
             hash: true,
@@ -69,7 +70,17 @@ module.exports = {
             title: 'Home',
             template: 'ejs-compiled-loader!./src/root.ejs',
             chunks: ['clock',"root"],
-            filename: 'root.html' //relative to root of the application
-        })
+            filename: '../../root.html' //relative to root of the application
+        }),
+        new CopyWebpackPlugin(
+            [{
+                //context: '../source/'
+                from: './src/images/favicon.ico',
+                to: '../images',
+                force: true
+            }], {
+                copyUnmodified: true
+            }
+        )
     ]
 };

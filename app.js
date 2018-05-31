@@ -1,33 +1,25 @@
-var app     = require('./bin/www.js').app		// Express.js
+var path    = require("path")
+var dir     = path.join( require('app-root-path').path, "dist")
+var express = require('express')		// Express.js
+var favicon = require('serve-favicon');
+var app     = require('./bin/www.js').app		// Express.js App
 var auth 	= require('./bin/auth.js');			// Authentication middleware using Passport (using "app")
 var users 	= require('./bin/users.js').router;	// Router for User Management
+var charts 	= require('./bin/charts.js').router;	// Router for charts Management
 
+
+app.use( favicon(path.join(dir, 'public/images/favicon.ico')));
+app.use( '/public'                      , express.static(path.join(dir, 'public')));
+app.use( '/private',auth.alreadyLoggedIn, express.static(path.join(dir, 'private')));
 app.post('/login' , auth.login ); //redirects to login page or original URL based on ?redir=
 app.post('/logout', auth.logout); //redirects to login page
-app.get( '/login' , (req,res)=>{
-	res.render('login',{
-		title:"Login Page" ,
-		user:req.user?req.user.id:null ,
-		message: "Unauthorized access is strictly prohibited!",
-		redir:req.query.redir });
-	}
-);
-app.get( '/'      , auth.alreadyLoggedIn, (req,res)=>{
-	res.render('home',{
-		title:"Home" ,
-		user:req.user?req.user.id:null ,
-		message: "Welcome!",
-		redir:req.query.redir });
-	}
-);
-app.use( "/users" , auth.alreadyLoggedIn ,users)
-app.get( '/test'  , auth.alreadyLoggedIn ,(req,res) => {
-	res.render('test',{ user:req.user ? req.user.id : null })
-});
 
-//
-// CATCH ALL BAD ONE REQUEST
-//
+app.get( '/'             , (req,res)=>{ res.sendFile(path.join(dir,'root.html'))})	
+app.get( '/root.html'    , (req,res)=>{ res.sendFile(path.join(dir,'root.html'))})
+app.get( '/login*'       , (req,res)=>{ res.sendFile(path.join(dir,'login.html'))})
+app.get( '/charts.html'  , auth.alreadyLoggedIn , (req,res)=>{ res.sendFile(path.join(dir,'charts.html'))})
+app.use( "/users"        , auth.alreadyLoggedIn ,users)
+app.use( "/charts"       , auth.alreadyLoggedIn ,charts)
 
 app.use(function(req, res, next) {
 	var message ="<p>Invalid URL! Your session is being logged! Unauthorized access to this site is strictly prohibited!</p>"

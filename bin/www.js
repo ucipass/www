@@ -1,4 +1,3 @@
-
 var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
@@ -8,7 +7,7 @@ var favicon = require('serve-favicon');
 var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
 var secretKey = "SuperSecretKey123!" ;
-var session = require('express-session');
+var session = require('express-session');	
 // MEMORY SESSION STORE
 //var sessionstore = require('sessionstore');
 //var mySessionStore = new sessionstore.createSessionStore();  // Sessionstore in memory
@@ -58,8 +57,6 @@ app.use(morgan(':date[iso] :logIP :logCC :method :status :url :user-agent', {str
 // EXPRESS STUFF
 app.set('views','./views/');
 app.set('view engine','pug');
-app.use(express.static(path.join(__dirname, '/../public')));
-app.use(favicon(__dirname + '/../public/images/favicon.ico'));
 app.locals.pretty = true // indent produces HTML for clarity
 app.use(cookieParser("SecretKey123"));
 app.use(session(mySession));
