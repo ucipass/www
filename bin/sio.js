@@ -57,7 +57,7 @@ sio.on('connection', (socket) => {
     });
     socket.on('echo', ( msg , callback )=>{
         try{
-            log.info("Socket.io echo recevied from",socket.id)
+            log.debug("Socket.io echo recevied from",socket.id)
             callback(msg)
         }catch(e){
             log.error("Socket.io error with sending reply on echo")

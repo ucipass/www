@@ -1,3 +1,6 @@
+import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import bootstrap from 'bootstrap';
+import moment from 'moment';
 import * as sio from './sioclient.js';
 import * as cookies from "js-cookie"
 
@@ -33,6 +36,28 @@ export function setup(alreadyLoggedIn){
     }else {
         showLoginBar()
     }
+
+    var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
+    var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          if (mutation.type == "attributes" && mutation.attributeName == "data-sio") {
+            if(document.body.dataset.sio == "connected"){
+                //console.log("Observer Connected")
+                e_login.classList.remove('btn-outline-danger')
+                e_logout.classList.remove('btn-outline-danger')
+                e_login.classList.add('btn-outline-success')
+                e_logout.classList.add('btn-outline-success')
+            }else{
+                ///console.log("Observer NOT Connected")
+                e_login.classList.remove('btn-outline-success')
+                e_logout.classList.remove('btn-outline-success') 
+                e_login.classList.add('btn-outline-danger')
+                e_logout.classList.add('btn-outline-danger')
+            }
+          }
+        });
+      });
+    observer.observe(document.body, { attributes: true });
 }
 
 function showLoginBar(){
@@ -59,7 +84,7 @@ async function login(){
     if ( await sio.login(user,pass) ){
         showLogoutBar()
         console.log("Logged in as user:",user)
-        window.location.href = "http://localhost:3000/root.html"
+        window.location.href = "/"
         return true
     }else{
         showLoginBar()
@@ -72,7 +97,7 @@ async function login(){
 
 async function logout(){
     await sio.logout()
-    window.location.href = "http://localhost:3000/root.html"
+    window.location.href = "/"
 }
 
 function alert(text){

@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Test</title>
+  </head>
+  <body>
+    <% include ./src/navbar.html %>
+    <p>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Method</th>
+            <th scope="col">Delay(ms)</th>
+            <th scope="col">Sent</th>
+            <th scope="col">Recived</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Socket.io</th>
+            <td id='sio-delay'>delay</td>
+            <td id='sio-sent'>sent</td>
+            <td id='sio-received'> received</td>
+          </tr>
+          <tr>
+            <th scope="row">Rest API</th>
+            <td id='rest-delay'>delay</td>
+            <td id='rest-sent'>sent</td>
+            <td id='rest-received'>received</td>
+          </tr>
+        </tbody>
+      </table>
+    </p>
+  </body>
+</html>

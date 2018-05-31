@@ -1,5 +1,6 @@
 import io from 'socket.io-client';
 import axios from 'axios'
+import * as moment from 'moment' ;
 var socket = null;
 async function init(url){
     let resolve,reject
@@ -9,21 +10,33 @@ async function init(url){
     socket.on('connect', async function () {
         let authenticated = await checkLogin()
         console.log("socket.io auth status", authenticated ? true :false , lastSocketID=socket.id);
+        if (document && document.body){
+            document.body.setAttribute("data-sio", "connected");
+        }
         resolve(authenticated)
     });
-    socket.on('disconnect', function () {
-        console.log("socket.io client disconnected", lastSocketID); 
+    socket.on('disconnect', function () { 
+        console.log("socket.io client disconnected", lastSocketID);
+        if (document && document.body){ 
+            document.body.setAttribute("data-sio", "disconnected");
+        }
     });
     //postauth("test","test")
     return p
 }
 
-function echo(msg){
-    msg = msg ? msg : "echo"
-    console.log("Sent Echo with message:",msg,"on:",new Date().toISOString())
-    socket.emit('echo', msg, (reply)=>{
-        console.log("Received Echo reply message:",reply,"on:",new Date().toISOString())
-    });
+async function echo(msg){
+    return new Promise((resolve,reject)=>{
+        msg = msg ? msg : "echo"
+        console.log("Sent SIO Echo with message:",msg,"on:",new Date().toISOString())
+        let start = moment()
+        socket.emit('echo', msg, (reply)=>{
+            console.log("Received SIO Echo reply message:",reply,"on:",new Date().toISOString())
+            let end = moment()
+            let delay = moment.duration(end.diff(start)).asMilliseconds()
+            resolve({reply:reply, delay:delay, start:start.format("h:mm:ss.SSS A"), end:end.format("h:mm:ss.SSS A") })
+        });
+    })
 }
 
 async function login(username,password){
@@ -110,4 +123,4 @@ function postauth(username,password){
         console.log(error);
       });    
 }
-export { init, login, logout, checkLogin, echo}
+export { init, login, logout, checkLogin, echo, socket}

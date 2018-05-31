@@ -2,7 +2,7 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var app = require('./www.js').app;
 var log = require("./logger.js")("auth")
-log.transports.console.level = "debug"
+log.transports.console.level = "info"
 app.use(passport.initialize());
 app.use(passport.session());
 

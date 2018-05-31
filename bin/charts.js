@@ -55,4 +55,4 @@ function charts(req, res) {	// All data is posted here with the exception if log
 }
 
 
-exports.router = router;
+module.exports = router;

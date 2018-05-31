@@ -9,6 +9,7 @@ module.exports = {
         'root': './src/root.js',
         "login": './src/login.js',
         "sioclient": './src/sioclient.js',
+        "test": './src/test/test-client.js',
         "clock": './src/clock.js'
     },
     output: {
@@ -70,7 +71,15 @@ module.exports = {
             title: 'Home',
             template: 'ejs-compiled-loader!./src/root.ejs',
             chunks: ['clock',"root"],
-            filename: '../../root.html' //relative to root of the application
+            filename: '../../index.html' //relative to root of the application
+        }),
+        new HtmlWebpackPlugin({
+            hash: true,
+            inject: 'head',
+            title: 'Test',
+            template: 'ejs-compiled-loader!./src/test/test.ejs',
+            chunks: ['test'],
+            filename: '../../test/index.html' //relative to root of the application
         }),
         new CopyWebpackPlugin(
             [{
