@@ -1,5 +1,12 @@
+var fs    = require("fs")
 var path    = require("path")
-var dir     = path.join( require('app-root-path').path, "dist")
+var dirApp  = require('app-root-path').path
+var dirHTML = path.join( dirApp , "dist")
+var dirDB   = path.join( dirApp , "db")
+var dirLOG  = path.join( dirApp , "log")
+if (!fs.existsSync(dirHTML)){ fs.mkdirSync(dirHTML);}
+if (!fs.existsSync(dirDB)){ fs.mkdirSync(dirDB);}
+if (!fs.existsSync(dirLOG)){ fs.mkdirSync(dirLOG);}
 var express = require('express')		// Express.js
 var favicon = require('serve-favicon');
 var app     = require('./bin/www.js').app		// Express.js App
@@ -9,14 +16,14 @@ var charts 	= require('./bin/charts.js');	// Router for charts Management
 var test 	= require('./src/test/test-server.js');	// Router for test Management
 
 
-app.use( favicon(path.join(dir, 'public/images/favicon.ico')));
-app.use( '/public'                      , express.static(path.join(dir, 'public')));
-app.use( '/private',auth.alreadyLoggedIn, express.static(path.join(dir, 'private')));
+app.use( favicon(path.join(dirHTML, 'public/images/favicon.ico')));
+app.use( '/public'                      , express.static(path.join(dirHTML, 'public')));
+app.use( '/private',auth.alreadyLoggedIn, express.static(path.join(dirHTML, 'private')));
 app.post('/login' , auth.login ); //redirects to login page or original URL based on ?redir=
 app.post('/logout', auth.logout); //redirects to login page
 
-app.get( '/'        , (req,res)=>{ res.sendFile(path.join(dir,'index.html'))})	
-app.get( '/login*'  , (req,res)=>{ res.sendFile(path.join(dir,'login.html'))})
+app.get( '/'        , (req,res)=>{ res.sendFile(path.join(dirHTML,'index.html'))})	
+app.get( '/login*'  , (req,res)=>{ res.sendFile(path.join(dirHTML,'login.html'))})
 app.use( "/users"   , auth.alreadyLoggedIn ,users)
 app.use( "/charts"  , auth.alreadyLoggedIn ,charts)
 app.use( "/test"    , test)

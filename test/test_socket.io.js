@@ -9,7 +9,7 @@ const {promisify} = require('util');
 var log = require("../bin/logger.js")("moccha")
 log.transports.console.level = "info"
 
-describe('Web Server Test', function(){
+describe('Socket.io Server Test', function(){
     it("POST Session Cookie Test", function(done){
         var jar = request.jar()
         request({url: url, jar: jar}, function () {
@@ -66,7 +66,7 @@ describe('Web Server Test', function(){
             });
         return auth   
     })
-    it.only("Post Socket.io authentication", async function(){
+    it("Post Socket.io authentication", async function(){
         let resolve,reject
         let auth = new Promise((res,rej)=>{resolve=res;reject=rej})
         var jar = request.jar()

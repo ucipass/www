@@ -2,6 +2,7 @@
 
 var assert = require('assert')
 var fs = require('fs')
+var path = require('path')
 var should = require('chai').should();
 var db = require("../bin/lib_sqlite");
 
@@ -50,7 +51,28 @@ describe('File Database Tests', function(){
       dbro:0, // optional
       dblog:0 // optional
   }
+  it('Create DB if not exists', function(){
+    let dbname     = path.join( require('app-root-path').path, "test","hello.db")
+    let json = {dbname:dbname}
 
+    return db.createTableIfNotExists("t1",[["f1","TEXT"],["f2","TEXT"]])(json)
+    .then( db.readTable("t1") )
+    .then( json=> json.results.slice(-1)[0].table.should.have.length(0) )
+    .catch( (e) => { console.log("ASSERT Exception",e); assert(false,"Exception") })
+/*
+    return Promise.resolve(json)
+		.then(db.open(json))
+		.then(db.stm("CREATE TABLE IF NOT EXISTS files (\
+			fpath NOT NULL,\
+			hash NOT NULL,\
+			size NOT NULL,\
+			ctime DATETIME NOT NULL,\
+			mtime DATETIME NOT NULL,\
+			active BOOLEAN NOT NULL,\
+			PRIMARY KEY (fpath)) "))
+    .then(db.write)
+*/
+  });
   it('Open DB', function(){
     return db.open(json)
     //.then( ()=>{ console.log(json) })

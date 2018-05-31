@@ -4,6 +4,25 @@ var loglevel = 0;
 function logSuccess(success){ console.log("LogPromise SUCCESS:\n", loglevel<2? success : JSON.stringify(success,null,3)) ; return Promise.resolve(success)}
 function logError(error){ console.log("LogPromise ERROR:\n", JSON.stringify(error,null,3)) ; return Promise.reject(error)}
 
+function createTableIfNotExists(tablename,columns_types){return function(json){return new Promise(function(resolve,reject){
+	var sqlstm = "";
+	columns_types.forEach(function(item,index){
+		if(index==0){
+			sqlstm += "CREATE TABLE IF NOT EXISTS " + tablename + " ( " + item[0] + " " + item[1] 
+			}
+		else{
+			sqlstm += " , " + item[0] + " " + item[1] 
+			}
+		})
+	sqlstm += " )"
+	Promise.resolve(json)
+	.then(open)
+	.then(stm(sqlstm))
+	.then(write)
+	.then(resolve)
+	.catch(close)
+	.catch(reject)
+	})}}
 function createTable(tablename,columns_types){return function(json){return new Promise(function(resolve,reject){
 	var sqlstm = "";
 	columns_types.forEach(function(item,index){
@@ -635,6 +654,7 @@ exports.sReadTable	= sReadTable
 exports.sInsertRow	= sInsertRow
 exports.sDeleteRow	= sDeleteRow
 exports.sUpdateRow	= sUpdateRow
+exports.createTableIfNotExists	= createTableIfNotExists
 /*	
 var json = {
 	dbname:":memory:", 

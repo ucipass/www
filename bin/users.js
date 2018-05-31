@@ -18,12 +18,17 @@ att.filter.limit:	String for limiting the results
 var path    = require("path")
 var dir     = path.join( require('app-root-path').path, "dist","users")
 var log = require("./logger.js")("users")
-var dbname = path.join(__dirname, "../db/", "users.db")
+var appRoot = require('app-root-path').path
+var dbname     = path.join( appRoot, "db", "users.db")
+var dbdir     = path.join( appRoot, "db")
 var JSONData = require('./jsondata.js');
 var ioData = new JSONData();
 var express = require('express');
 var router = express.Router();
 var db = require('./lib_sqlite.js');
+var File = require("ucipass-file")
+
+setup()
 
 //router.get("/", function (req, res) {
 //	res.render('users',{title:"Users" ,user:req.user?req.user.id:null ,message: "Users",redir:req.query.redir });
@@ -31,6 +36,36 @@ var db = require('./lib_sqlite.js');
 router.get( '/', (req,res)=>{ res.sendFile(path.join(dir,'index.html'))})
 
 router.post("/", users); 
+
+async function setup(){
+	var f = new File(dbname)
+	if (! await f.isFile() ){
+		console.log(`database file ${dbname} does not exists! Creating.....`)
+		let json = {dbname:dbname}
+		await db.createTableIfNotExists("users",[["id","TEXT"],["username","TEXT"],["salt","TEXT"],["password","TEXT"]])(json)
+		
+		var id = "admin"
+		var password = "admin"
+		var salt = "1234567890"
+		var crypto = require('crypto');
+		var hash = crypto.createHash('sha256');
+		hash.update(password);
+		hash.update(salt);
+		var digest = hash.digest('hex');
+		var table 	= "users"
+		var columns = ["id","username","salt","password"]
+		var newrow 	= [id,id,salt,digest]
+
+		db.sInsertRow(dbname,table,columns,newrow)
+		.then(data => {
+			console.log("First 'admin' user created")
+		})
+		.catch( e => {
+			console.log("First 'admin' user creation failed with error:",e)
+		})
+	}
+	
+}
 
 function users(req, res) {	// All data is posted here with the exception if login
 
