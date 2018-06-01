@@ -12,7 +12,7 @@ var favicon = require('serve-favicon');
 var app     = require('./bin/www.js').app		// Express.js App
 var auth 	= require('./bin/auth.js');			// Authentication middleware using Passport (using "app")
 var users 	= require('./bin/users.js');	// Router for User Management
-var charts 	= require('./bin/charts.js');	// Router for charts Management
+var charts 	= require('./src/charts/charts-server.js');	// Router for charts Management
 var test 	= require('./src/test/test-server.js');	// Router for test Management
 
 
@@ -25,7 +25,7 @@ app.post('/logout', auth.logout); //redirects to login page
 app.get( '/'        , (req,res)=>{ res.sendFile(path.join(dirHTML,'index.html'))})	
 app.get( '/login*'  , (req,res)=>{ res.sendFile(path.join(dirHTML,'login.html'))})
 app.use( "/users"   , auth.alreadyLoggedIn ,users)
-app.use( "/charts"  , auth.alreadyLoggedIn ,charts)
+app.use( "/charts"  ,charts)
 app.use( "/test"    , test)
 
 app.use(function(req, res, next) {

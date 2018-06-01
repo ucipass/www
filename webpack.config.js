@@ -4,12 +4,12 @@ var HtmlWebpackPlugin = require('html-webpack-plugin'); // This is for watch mod
 var CopyWebpackPlugin =  require('copy-webpack-plugin');
 module.exports = {
     entry:{
-        "charts": './src/charts.js',
         "users": './src/users.js',
         'root': './src/root.js',
         "login": './src/login.js',
         "sioclient": './src/sioclient.js',
         "test": './src/test/test-client.js',
+        "charts": './src/charts/charts-client.js',
         "clock": './src/clock.js'
     },
     output: {
@@ -45,7 +45,7 @@ module.exports = {
             hash: true,
             inject: 'head',
             title: 'Charts',
-            template: 'ejs-compiled-loader!./src/charts.ejs',
+            template: 'ejs-compiled-loader!./src/charts/charts.ejs',
             chunks: ['charts'],
             filename: '../../charts/index.html' //relative to root of the application
         }),
