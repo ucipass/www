@@ -8,7 +8,7 @@ import * as sio from '../sioclient.js';
 import * as navbar from '../navbar.js';
 import JSONData from '../jsondata.js';
 import echarts from 'echarts';
-//import './style.css';
+
 
 window.onload = async function(){
   let alreadyLoggedIn = await sio.init(window.location.hostname+":"+window.location.port)
@@ -20,14 +20,12 @@ window.onload = async function(){
   let chartDay = new Draw("chartDay")
   let chartWeek = new Draw("chartWeek")
 
-
   setInterval(()=>{
     var ioData = new JSONData("test","charts",{cmd:"getdata"});
     //console.log("Sent REST ECHO REPLY")
     ioData.post(function(msg){
         console.log("Received REST CHART REPLY",msg)
         chartSec.set(msg.data.attributes.data.json)
-
     })
   },2000)
 }
