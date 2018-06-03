@@ -13,7 +13,7 @@ var json = {
 }
 
 
-socket.on('connect', function () {
+socket.on('connect', function () { 
     console.log("socket connected"); 
     sioLoop()
 });

@@ -56,7 +56,7 @@ function login(){
 }
 
 function postLoop(){
-    setInterval(()=>{
+    setInterval(()=>{ 
         //var random = Math.floor(Math.random()*10);
         var random = Math.random()*10;
         json.data.attributes.data = random
