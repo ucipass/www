@@ -8,6 +8,8 @@ var cookieParser = require('cookie-parser')
 const {promisify} = require('util');
 var log = require("../bin/logger.js")("moccha")
 log.transports.console.level = "debug"
+var username = "admin"
+var password = "admin"
 
 describe('Web Server Test', function(){
     it("Login Authentication as admin", function(done){
@@ -68,7 +70,7 @@ describe('Web Server Test', function(){
         request.post(
             {
                 url:     url+"/login",
-                form:    { username: "test", password:"test" },
+                form:    { username: username, password:password },
                 jar: jar
             },function(err, response, body){
                 if (err) {

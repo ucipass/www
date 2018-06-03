@@ -31,7 +31,7 @@ describe('Certificate Test', function(){
         }else(
             reject(false)
         )
-    })
+    }).timeout(20000)
     it("SSL Server Use", async function(){
         let resolve,reject
         let p = new Promise((res,rej)=>{resolve=res;reject=rej})
@@ -67,5 +67,5 @@ describe('Certificate Test', function(){
             reject(e)
         }
         return p
-    })
+    }).timeout(20000)
 })

@@ -8,6 +8,8 @@ var cookieParser = require('cookie-parser')
 const {promisify} = require('util');
 var log = require("../bin/logger.js")("moccha")
 log.transports.console.level = "info"
+var username = "admin"
+var password = "admin"
 
 describe('Socket.io Server Test', function(){
     it("POST Session Cookie Test", function(done){
@@ -40,7 +42,7 @@ describe('Socket.io Server Test', function(){
         request.post(
             {
                 url:     url+"/login",
-                form:    { username: "test", password:"test" },
+                form:    { username: username, password:username },
                 jar: jar
             },function(err, response, body){
                 if (err) {
@@ -74,7 +76,7 @@ describe('Socket.io Server Test', function(){
         request.post(
             {
                 url:     url+"/login",
-                form:    { username: "test", password:"test" },
+                form:    { username: username, password:username },
                 jar: jar
             },function(err, response, body){
                 if (err) {
@@ -118,5 +120,5 @@ describe('Socket.io Server Test', function(){
         socket.on('disconnect', function(){});
         //await promisify(setTimeout)(2000)
         return Promise.all([auth,sauth])
-    })
+    }).timeout(5000)
 })
