@@ -24,8 +24,9 @@ window.onload = async function(){
     var ioData = new JSONData("test","charts",{cmd:"getdata"});
     //console.log("Sent REST ECHO REPLY")
     ioData.post(function(msg){
-        console.log("Received REST CHART REPLY",msg)
+        console.log("Received REST CHART REPLY"/*,msg*/)
         chartSec.set(msg.data.attributes.data.json)
+        chartMin.set(msg.data.attributes.data.json_mins_60)  
     })
   },2000)
 }
@@ -80,11 +81,21 @@ export default class Draw {
       this.chart.setOption(this.option);
   }
   set(data){
-      this.option.title.text = data.label
-      this.option.series[0].data = data.series[0]
-      this.option.series[1].data = data.series[1]
-      this.option.series[2].data = data.series[2]
-      this.option.xAxis.data = data.labels
+      let arrLabel = []
+      let arrMax = []
+      let arrMin = []
+      let arrAvg = []
+      data.forEach(element => {
+          arrLabel.push(element.label)
+          arrAvg.push(element.avg)
+          arrMax.push(element.max)
+          arrMin.push(element.min)          
+      });
+      this.option.title.text = "TEST"
+      this.option.series[0].data = arrMax
+      this.option.series[1].data = arrAvg
+      this.option.series[2].data = arrMin
+      this.option.xAxis.data = arrLabel
       this.chart.setOption(this.option);
   }    
 }

@@ -1,7 +1,5 @@
 
 /************************************************************************
-
-
 Replies to log messages valid request:
 {
 	"data":
@@ -9,12 +7,11 @@ Replies to log messages valid request:
 		"id":"test",
 		"type":"test",
 		"attributes":{
-			"cmd":"log"
+			"cmd":"log",
 			"data":1
 		}		
 	}
 }
-
 *************************************************************************/
 var name = "charts"
 var path     = require("path")
@@ -25,9 +22,25 @@ var JSONData = require( path.join( dirBIN,'jsondata.js'));
 var ioData = new JSONData();
 var express = require('express');
 var router = express.Router();
-const Mychart = require('ucipass-chart')
-var chart = new Mychart("sensor")
+const Datalog = require('ucipass-chart')
 var moment = require("moment")
+var appRoot = require("app-root-path").path
+
+let logname = "sensor"
+let logdir = path.join (appRoot,"log")
+let zipfile = path.join(appRoot,"datalog.zip")
+let logSec = new Datalog({logdir:logdir,format:"seconds",name:logname,logEnabled:false})
+let logMin = new Datalog({logdir:logdir,format:"minutes",name:logname})
+let logHour = new Datalog({logdir:logdir,format:"hours",name:logname})
+let logDay = new Datalog({logdir:logdir,format:"days",name:logname})
+let logWeek = new Datalog({logdir:logdir,format:"weeks",name:logname});
+let logPromise = (async ()=>{
+	await logMin.readFileLog()
+	await logHour.readFileLog()
+	await logDay.readFileLog()
+	await logWeek.readFileLog()
+	return true
+})().catch((e)=>{console.log(e);return true});
 
 router.get( '/'  , (req,res)=>{ res.sendFile(path.join(dirHTML,'index.html'))})
 
@@ -45,10 +58,14 @@ function charts(req, res) {	// All data is posted here with the exception if log
 		res.end("INVALID POST received by Nodejs!\n");
 		return;
 	}
-
 	if (ioData.cmd() === "log") {
-		console.log(ioData.att().data)
-		chart.log(ioData.att().data, moment())
+		log.info(ioData.att().data)
+		let value = parseFloat(ioData.att().data)
+		logSec.log(value)
+		logMin.log(value)
+		logHour.log(value)
+		logDay.log(value)
+		logWeek.log(value)
 		ioData.json.error = null;
 		ioData.json.data.type = ioData.json.data.type+'-reply';
 		ioData.json.data.attributes.msg = "This is a reply message from the server";
@@ -57,11 +74,12 @@ function charts(req, res) {	// All data is posted here with the exception if log
 	}
 	else if (ioData.cmd() === "getdata") {
 		let msg = {}
-		msg.json = chart.getChartSecond()
-		msg.json_mins_60 = chart.getChartMinute()
-		msg.json_hours_60 = chart.getChartHour()
-		msg.json_days_60 = chart.getChartDay()
-		msg.json_weeks_60 = chart.getChartWeek()
+		log.info("GET DATA REQ",ioData.json.data)
+		msg.json = logSec.readMemLog()
+		msg.json_mins_60 = logMin.readMemLog()
+		msg.json_hours_60 = logHour.readMemLog()
+		msg.json_days_60 = logDay.readMemLog()
+		msg.json_weeks_60 = logWeek.readMemLog()
 		ioData.json.data.attributes.data = msg;
 		ioData.json.data.type = ioData.json.data.type+'-reply';
 		ioData.json.error = null;
@@ -76,8 +94,6 @@ function charts(req, res) {	// All data is posted here with the exception if log
 		res.json(ioData.getjson()); //THIS IS WHERE THE RESPONSE IS SENT
 		return;	
 	}
-
 }
-
 
 module.exports = router;
