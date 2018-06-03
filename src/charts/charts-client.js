@@ -25,8 +25,11 @@ window.onload = async function(){
     //console.log("Sent REST ECHO REPLY")
     ioData.post(function(msg){
         console.log("Received REST CHART REPLY"/*,msg*/)
-        chartSec.set(msg.data.attributes.data.json)
-        chartMin.set(msg.data.attributes.data.json_mins_60)  
+        chartSec.set(msg.data.attributes.data.sec)
+        chartMin.set(msg.data.attributes.data.min)  
+        chartHour.set(msg.data.attributes.data.hour)  
+        chartDay.set(msg.data.attributes.data.day)  
+        chartWeek.set(msg.data.attributes.data.week)  
     })
   },2000)
 }
@@ -80,18 +83,18 @@ export default class Draw {
       }
       this.chart.setOption(this.option);
   }
-  set(data){
+  set(msg){
       let arrLabel = []
       let arrMax = []
       let arrMin = []
       let arrAvg = []
-      data.forEach(element => {
+      msg.data.forEach(element => {
           arrLabel.push(element.label)
           arrAvg.push(element.avg)
           arrMax.push(element.max)
           arrMin.push(element.min)          
       });
-      this.option.title.text = "TEST"
+      this.option.title.text = msg.name
       this.option.series[0].data = arrMax
       this.option.series[1].data = arrAvg
       this.option.series[2].data = arrMin

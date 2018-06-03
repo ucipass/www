@@ -29,11 +29,11 @@ var appRoot = require("app-root-path").path
 let logname = "sensor"
 let logdir = path.join (appRoot,"log")
 let zipfile = path.join(appRoot,"datalog.zip")
-let logSec = new Datalog({logdir:logdir,format:"seconds",name:logname,logEnabled:false})
-let logMin = new Datalog({logdir:logdir,format:"minutes",name:logname})
-let logHour = new Datalog({logdir:logdir,format:"hours",name:logname})
-let logDay = new Datalog({logdir:logdir,format:"days",name:logname})
-let logWeek = new Datalog({logdir:logdir,format:"weeks",name:logname});
+let logSec = new Datalog({logdir:logdir,format:"seconds",name:logname+"_seconds",logEnabled:false})
+let logMin = new Datalog({logdir:logdir,format:"minutes",name:logname+"_minutes"})
+let logHour = new Datalog({logdir:logdir,format:"hours",name:logname+"_hours"})
+let logDay = new Datalog({logdir:logdir,format:"days",name:logname+"_days"})
+let logWeek = new Datalog({logdir:logdir,format:"weeks",name:logname+"_weeks"});
 let logPromise = (async ()=>{
 	await logMin.readFileLog()
 	await logHour.readFileLog()
@@ -73,13 +73,13 @@ function charts(req, res) {	// All data is posted here with the exception if log
 		res.json(ioData.getjson()); //THIS IS WHERE THE RESPONSE IS SENT
 	}
 	else if (ioData.cmd() === "getdata") {
-		let msg = {}
+		let msg = {name:logname}
 		log.info("GET DATA REQ",ioData.json.data)
-		msg.json = logSec.readMemLog()
-		msg.json_mins_60 = logMin.readMemLog()
-		msg.json_hours_60 = logHour.readMemLog()
-		msg.json_days_60 = logDay.readMemLog()
-		msg.json_weeks_60 = logWeek.readMemLog()
+		msg.sec = logSec.readMemLog()
+		msg.min = logMin.readMemLog()
+		msg.hour = logHour.readMemLog()
+		msg.day = logDay.readMemLog()
+		msg.week = logWeek.readMemLog()
 		ioData.json.data.attributes.data = msg;
 		ioData.json.data.type = ioData.json.data.type+'-reply';
 		ioData.json.error = null;
