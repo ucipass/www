@@ -1,6 +1,6 @@
 const path = require('path');
 const rootDir = path.join( __dirname, "dist","public","js")
-var HtmlWebpackPlugin = require('html-webpack-plugin'); // This is for watch mode
+var HtmlWebpackPlugin = require('html-webpack-plugin'); //This is for watch mode
 var CopyWebpackPlugin =  require('copy-webpack-plugin');
 module.exports = {
     entry:{
