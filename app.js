@@ -10,6 +10,7 @@ if (!fs.existsSync(dirLOG)){ fs.mkdirSync(dirLOG);}
 var express = require('express')		// Express.js
 var favicon = require('serve-favicon');
 var app     = require('./bin/www.js').app		// Express.js App
+var server     = require('./bin/www.js').server		// Express.js App
 var auth 	= require('./bin/auth.js');			// Authentication middleware using Passport (using "app")
 var users 	= require('./bin/users.js');	// Router for User Management
 var charts 	= require('./src/charts/charts-server.js');	// Router for charts Management
@@ -41,6 +42,6 @@ app.use(function(req, res, next) {
 	}
 });
 
-module.exports = app;
+module.exports = server;
 
 

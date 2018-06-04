@@ -53,11 +53,12 @@ describe('Certificate Test', function(){
             response.send('Hello from Express!')
         })
         try{
-            https.createServer(options, app).listen(8443,(err)=>{
+            let s = https.createServer(options, app).listen(8443,(err)=>{
                 if (err){
                     console.log(err);
                     reject(err)
                 }else{
+                    s.close()
                     resolve(true)
                 }
 
