@@ -39,7 +39,7 @@ export default class Draw {
       this.element = document.getElementById(divID);
       this.chart = echarts.init(this.element);
       this.option = {
-          title: { text: divID },
+          title: { text: "" },
           tooltip: {},
           legend: { data: ['Sales'] },
           xAxis: {
@@ -94,7 +94,7 @@ export default class Draw {
           arrMax.push(element.max)
           arrMin.push(element.min)          
       });
-      this.option.title.text = msg.name
+      this.option.title.text = msg.name + " - " + msg.format
       this.option.series[0].data = arrMax
       this.option.series[1].data = arrAvg
       this.option.series[2].data = arrMin

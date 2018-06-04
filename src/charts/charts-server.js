@@ -29,11 +29,11 @@ var appRoot = require("app-root-path").path
 let logname = "sensor"
 let logdir = path.join (appRoot,"log")
 let zipfile = path.join(appRoot,"datalog.zip")
-let logSec = new Datalog({logdir:logdir,format:"seconds",name:logname+"_seconds",logEnabled:false})
-let logMin = new Datalog({logdir:logdir,format:"minutes",name:logname+"_minutes"})
-let logHour = new Datalog({logdir:logdir,format:"hours",name:logname+"_hours"})
-let logDay = new Datalog({logdir:logdir,format:"days",name:logname+"_days"})
-let logWeek = new Datalog({logdir:logdir,format:"weeks",name:logname+"_weeks"});
+let logSec = new Datalog({logdir:logdir,format:"seconds",name:logname,logEnabled:false})
+let logMin = new Datalog({logdir:logdir,format:"minutes",name:logname})
+let logHour = new Datalog({logdir:logdir,format:"hours",name:logname})
+let logDay = new Datalog({logdir:logdir,format:"days",name:logname})
+let logWeek = new Datalog({logdir:logdir,format:"weeks",name:logname});
 let logPromise = (async ()=>{
 	await logMin.readFileLog()
 	await logHour.readFileLog()
