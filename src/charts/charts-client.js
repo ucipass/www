@@ -8,23 +8,32 @@ import * as sio from '../sioclient.js';
 import * as navbar from '../navbar.js';
 import JSONData from '../jsondata.js';
 import echarts from 'echarts';
+import 'select2';                       // globally assign select2 fn to $ element
+import 'select2/dist/css/select2.css';  // optional if you have css loader
 
 
 window.onload = async function(){
   let alreadyLoggedIn = await sio.init(window.location.hostname+":"+window.location.port)
   navbar.setup(alreadyLoggedIn)
-
   let chartSec = new Draw("chartSec")
   let chartMin = new Draw("chartMin")
   let chartHour = new Draw("chartHour")
   let chartDay = new Draw("chartDay")
   let chartWeek = new Draw("chartWeek")
+  var ioData = new JSONData("test","charts",{cmd:"getcharts"});
+  console.log("Sent REST ECHO REPLY")
+    ioData.post(function(msg){
+        console.log("Received REST CHART REPLY",msg)
+        $("#chartSelect").select2({data: msg.data.attributes.data});
+        //$("#chartSelect").select2({data: [ {id:"1",text:"1"}]});
+        
+    })
 
   setInterval(()=>{
     var ioData = new JSONData("test","charts",{cmd:"getdata"});
-    //console.log("Sent REST ECHO REPLY")
-    ioData.post(function(msg){
-        console.log("Received REST CHART REPLY"/*,msg*/)
+        console.log("Sent REST ECHO REPLY")
+        ioData.post(function(msg){
+        console.log("Received REST CHART REPLY")
         chartSec.set(msg.data.attributes.data.sec)
         chartMin.set(msg.data.attributes.data.min)  
         chartHour.set(msg.data.attributes.data.hour)  
@@ -34,6 +43,8 @@ window.onload = async function(){
   },2000)
 }
 
+
+  
 export default class Draw {
   constructor(divID,options){
       this.element = document.getElementById(divID);

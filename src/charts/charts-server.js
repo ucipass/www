@@ -17,6 +17,7 @@ var name = "charts"
 var path     = require("path")
 var dirHTML  = path.join( require('app-root-path').path, "dist",name)
 var dirBIN   = path.join( require('app-root-path').path, "bin")
+var dirLog   = path.join( require('app-root-path').path, "log")
 var log      = require( path.join( dirBIN,"logger.js"  ))("chart")
 var JSONData = require( path.join( dirBIN,'jsondata.js'));
 var ioData = new JSONData();
@@ -25,6 +26,9 @@ var router = express.Router();
 const Datalog = require('ucipass-chart')
 var moment = require("moment")
 var appRoot = require("app-root-path").path
+const {promisify} = require('util');
+const fs = require('fs');
+const readdirAsync = promisify(fs.readdir);
 
 let logname = "sensor"
 let logdir = path.join (appRoot,"log")
@@ -85,6 +89,23 @@ function charts(req, res) {	// All data is posted here with the exception if log
 		ioData.json.error = null;
 		log.info('SEND:', ioData.id(),  ioData.cmd(), "reply");
 		res.json(ioData.getjson()); //THIS IS WHERE THE RESPONSE IS SENT
+	}
+	else if (ioData.cmd() === "getcharts") {
+		let msg = {name:logname}
+		log.info("GET DATA REQ",ioData.json.data);
+		(async()=>{
+			let dirlist = await readdirAsync(logdir)
+			let loglist = dirlist
+			.filter( (item)=> item.startsWith("datalog_") )  //filter just with datalog
+			.map(    (item)=> item.split("_")[1] )			 // get lognames
+			.filter( (item, index, self)=> index == self.indexOf(item) ) // filter duplicates
+			.map(    (item)=> {return { text: item, id: item } })	// format for select2	
+			ioData.json.data.attributes.data = loglist;
+			ioData.json.data.type = ioData.json.data.type+'-reply';
+			ioData.json.error = null;
+			log.info('SEND:', ioData.id(),  ioData.cmd(), "reply");
+			res.json(ioData.getjson()); //THIS IS WHERE THE RESPONSE IS SENT				
+		})();
 	}
 	else {
 		ioData.json.error = "no matching command";
