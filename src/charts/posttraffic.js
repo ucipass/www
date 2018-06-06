@@ -16,7 +16,8 @@ var json = {
 		"type":"test",
 		"attributes":{
 			"cmd":"log",
-			"data":4
+            "data":4,
+            "logname":"random"
 		}		
 	}
 }

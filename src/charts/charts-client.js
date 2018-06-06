@@ -10,41 +10,73 @@ import JSONData from '../jsondata.js';
 import echarts from 'echarts';
 import 'select2';                       // globally assign select2 fn to $ element
 import 'select2/dist/css/select2.css';  // optional if you have css loader
+import { resolve } from 'path';
 
+// GLOBALS
+var chartSec
+var chartMin
+var chartHour
+var chartDay
+var chartWeek 
 
 window.onload = async function(){
-  let alreadyLoggedIn = await sio.init(window.location.hostname+":"+window.location.port)
-  navbar.setup(alreadyLoggedIn)
-  let chartSec = new Draw("chartSec")
-  let chartMin = new Draw("chartMin")
-  let chartHour = new Draw("chartHour")
-  let chartDay = new Draw("chartDay")
-  let chartWeek = new Draw("chartWeek")
-  var ioData = new JSONData("test","charts",{cmd:"getcharts"});
-  console.log("Sent REST ECHO REPLY")
-    ioData.post(function(msg){
-        console.log("Received REST CHART REPLY",msg)
-        $("#chartSelect").select2({data: msg.data.attributes.data});
-        //$("#chartSelect").select2({data: [ {id:"1",text:"1"}]});
-        
-    })
-
-  setInterval(()=>{
-    var ioData = new JSONData("test","charts",{cmd:"getdata"});
-        console.log("Sent REST ECHO REPLY")
-        ioData.post(function(msg){
-        console.log("Received REST CHART REPLY")
-        chartSec.set(msg.data.attributes.data.sec)
-        chartMin.set(msg.data.attributes.data.min)  
-        chartHour.set(msg.data.attributes.data.hour)  
-        chartDay.set(msg.data.attributes.data.day)  
-        chartWeek.set(msg.data.attributes.data.week)  
-    })
-  },2000)
+    $('#chartForm').on('submit', function(event){event.preventDefault()})
+    $('#chartSelect').on('select2:select', fnChartSelect)
+    $('#chartRefresh').on('click', fnChartRefresh)
+    chartSec = new Draw("chartSec")
+    chartMin = new Draw("chartMin")
+    chartHour = new Draw("chartHour")
+    chartDay = new Draw("chartDay")
+    chartWeek = new Draw("chartWeek")
+    getChartList().then(getChart)
+    let alreadyLoggedIn = await sio.init(window.location.hostname+":"+window.location.port)
+    navbar.setup(alreadyLoggedIn)
+    setInterval(()=>{getChartList().then(getChart)},5000)
 }
-
-
-  
+function fnChartSelect (e) {
+    console.log("Selected chart:",e.params.data.text);
+    getChart()
+};
+function fnChartRefresh(e) {
+    getChartList().then(getChart)
+};
+async function getChartList(){
+    return new Promise((resolve,reject)=>{
+        try {
+            var ioData = new JSONData("test","charts",{cmd:"getcharts"});
+            ioData.post(function(msg){
+                console.log("Received REST CHART REPLY",msg)
+                $("#chartSelect").select2({data: msg.data.attributes.data});
+                resolve(true)
+            })
+        } catch (error) {
+            console.log("GETCHARTS ERROR",error)
+            reject(error)
+        }
+    })
+}
+async function getChart (){
+    return new Promise((resolve,reject)=>{
+        try {
+            let currentChart = $('#chartSelect').val();
+            var ioData = new JSONData("test","charts",{cmd:"getdata", logname:currentChart});
+            console.log("Sent REST ECHO REPLY")
+            ioData.post(function(msg){
+                console.log("Received REST CHART REPLY")
+                chartSec.set(msg.data.attributes.data.sec)
+                chartMin.set(msg.data.attributes.data.min)  
+                chartHour.set(msg.data.attributes.data.hour)  
+                chartDay.set(msg.data.attributes.data.day)  
+                chartWeek.set(msg.data.attributes.data.week)
+                resolve(true)
+            })   
+        } catch (error) {
+            console.log("DRAWCHART ERROR",error)
+            reject(error)
+        }
+    })
+     
+}
 export default class Draw {
   constructor(divID,options){
       this.element = document.getElementById(divID);
