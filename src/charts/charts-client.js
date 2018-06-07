@@ -17,12 +17,17 @@ var chartSec
 var chartMin
 var chartHour
 var chartDay
-var chartWeek 
+var chartWeek
+var refresh
 
 window.onload = async function(){
     $('#chartForm').on('submit', function(event){event.preventDefault()})
     $('#chartSelect').on('select2:select', fnChartSelect)
-    $('#chartRefresh').on('click', fnChartRefresh)
+    $('#refreshSelect').on('select2:select', fnChartRefresh)
+    $("#refreshSelect").select2({
+        placeholder: "Refresh Rate",
+        allowClear: true
+    });
     chartSec = new Draw("chartSec")
     chartMin = new Draw("chartMin")
     chartHour = new Draw("chartHour")
@@ -31,14 +36,15 @@ window.onload = async function(){
     getChartList().then(getChart)
     let alreadyLoggedIn = await sio.init(window.location.hostname+":"+window.location.port)
     navbar.setup(alreadyLoggedIn)
-    setInterval(()=>{getChartList().then(getChart)},5000)
-}
+    }
 function fnChartSelect (e) {
     console.log("Selected chart:",e.params.data.text);
     getChart()
 };
 function fnChartRefresh(e) {
-    getChartList().then(getChart)
+    clearInterval(refresh)
+    let ms = parseInt(e.params.data.id)*1000
+    refresh = setInterval( ()=>{ getChart() }, ms)
 };
 async function getChartList(){
     return new Promise((resolve,reject)=>{
@@ -46,7 +52,14 @@ async function getChartList(){
             var ioData = new JSONData("test","charts",{cmd:"getcharts"});
             ioData.post(function(msg){
                 console.log("Received REST CHART REPLY",msg)
-                $("#chartSelect").select2({data: msg.data.attributes.data});
+                msg.data.attributes.data.unshift({text: "", id: ""})
+                console.log(msg)
+                $("#chartSelect").select2({
+                    placeholder: "Charts",
+                    allowClear: true,
+                    width: 'resolve',
+                    data: msg.data.attributes.data
+                });
                 resolve(true)
             })
         } catch (error) {
@@ -60,9 +73,9 @@ async function getChart (){
         try {
             let currentChart = $('#chartSelect').val();
             var ioData = new JSONData("test","charts",{cmd:"getdata", logname:currentChart});
-            console.log("Sent REST ECHO REPLY")
+            console.log("Sent Chart Request")
             ioData.post(function(msg){
-                console.log("Received REST CHART REPLY")
+                console.log("Received Chart Data")
                 chartSec.set(msg.data.attributes.data.sec)
                 chartMin.set(msg.data.attributes.data.min)  
                 chartHour.set(msg.data.attributes.data.hour)  
@@ -83,7 +96,7 @@ export default class Draw {
       this.chart = echarts.init(this.element);
       this.option = {
           title: { text: "" },
-          tooltip: {},
+          tooltip: { trigger: 'axis'        },
           legend: { data: ['Sales'] },
           xAxis: {
               axisLabel: {
@@ -132,7 +145,7 @@ export default class Draw {
       let arrMin = []
       let arrAvg = []
       msg.data.forEach(element => {
-          arrLabel.push(element.label)
+          arrLabel.push(element.label ?element.label : "" )
           arrAvg.push(element.avg)
           arrMax.push(element.max)
           arrMin.push(element.min)          

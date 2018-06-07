@@ -1,19 +1,39 @@
-<form id="chartForm" class="form-inline">
-  <div class="form-group mb-2">
-    <input type="text" readonly class="form-control-plaintext" id="staticEmail2" value=" Select Chart">
+<div class="row justify-content-md-center mt-2">
+  <div class="col col-lg-2"></div>
+  <div class="col-md-auto">
+    <form id="chartForm" class="form-inline">
+      <div class="form-group mb-2">
+        <select class="select form-control" id="chartSelect"></select>
+      </div>
+      <div class="form-group mb-2">
+        <select class="select form-control" id="refreshSelect">
+          <option value=""></option>
+          <option value="1">1 Second</option>
+          <option value="2">2 Seconds</option>
+          <option value="3">3 Seconds</option>
+          <option value="4">4 Seconds</option>
+          <option value="5">5 Seconds</option>
+          <option value="10">10 Seconds</option>
+          <option value="20">20 Seconds</option>
+          <option value="30">30 Seconds</option>
+          <option value="60">60Seconds</option>
+        </select>
+      </div>
+      <!--
+      <div class="form-group mb-2">
+        <button id='chartRefresh' class="btn btn-sm btn-outline-success my-2 my-sm-0" type="submit">Refresh</button>
+      </div>
+      -->
+    </form>
   </div>
-  <div class="form-group mb-2">
-    <select class="select form-control" id="chartSelect"></select>
+  <div class="col col-lg-2"></div>
+</div>
+<div class="row justify-content-md-center">
+  <div class="col-md-auto">
+    <div id="chartSec" style="width: 1000px; height: 350px;"></div>
+    <div id="chartMin" style="width: 1000px; height: 350px;"></div>
+    <div id="chartHour" style="width: 1000px; height: 350px;"></div>
+    <div id="chartDay" style="width: 1000px; height: 350px;"></div>
+    <div id="chartWeek" style="width: 1000px; height: 350px;"></div>   
   </div>
-  <div class="form-group mb-2">
-    <button id='chartRefresh' class="btn btn-sm btn-outline-success my-2 my-sm-0" type="submit">Refresh</button>
-  </div>
-</form>
-
-<div>
-  <div id="chartSec" style="width: 1000px; height: 350px;"></div>
-  <div id="chartMin" style="width: 1000px; height: 350px;"></div>
-  <div id="chartHour" style="width: 1000px; height: 350px;"></div>
-  <div id="chartDay" style="width: 1000px; height: 350px;"></div>
-  <div id="chartWeek" style="width: 1000px; height: 350px;"></div>      
 </div>

@@ -1,7 +1,9 @@
 var url = "http://localhost:3000"
 var path = require("path")
 var dirBIN   = path.join( require('app-root-path').path, "bin")
-var log      = require( path.join(dirBIN, "logger.js")) ("POSTTRAFFIC")
+const DEBUG_LEVEL = "info"
+const winston = require("winston")
+const log = new (winston.Logger)({transports: [ new (winston.transports.Console)({level:DEBUG_LEVEL}) ]});
 log.transports.console.level = "debug"
 var request = require("request")
 var cookieParser = require('cookie-parser')
