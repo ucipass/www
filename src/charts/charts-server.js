@@ -15,7 +15,7 @@ Replies to valid JSON requests:
 *************************************************************************/
 const appRoot = require('app-root-path').path
 const MODULE_NAME = "charts"
-const DEBUG_LEVEL = "error"
+const DEBUG_LEVEL = "debug"
 const fs = require('fs');
 const path     = require("path")
 const dirHTML  = path.join( appRoot , "dist" , MODULE_NAME)
@@ -26,9 +26,11 @@ const moment = require("moment")
 const winston = require('winston')
 const JSONData = require( path.join( dirBIN,'jsondata.js'));
 const Datalog = require('ucipass-chart')
+const log = require("ucipass-logger")("MODULE_NAME");
+log.transports.console.level = "debug"
 const {promisify} = require('util');
 const readdirAsync = promisify(fs.readdir);
-const log = new (winston.Logger)({transports: [ new (winston.transports.Console)({level:DEBUG_LEVEL}) ]});
+//const log = new (winston.Logger)({transports: [ new (winston.transports.Console)({level:DEBUG_LEVEL}) ]});
 const logList = []  // Array of all logs tracked
 
 router.get( '/'  , (req,res)=>{ res.sendFile(path.join(dirHTML,'index.html'))})
