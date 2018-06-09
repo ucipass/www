@@ -49,6 +49,7 @@
     "ejs-compiled-loader": "^1.1.0",
     "ejs-render-loader": "^1.0.0",
     "express": "^4.16.3",
+    "express-fileupload": "^0.4.0",
     "express-session": "^1.15.6",
     "fast-csv": "^2.4.1",
     "file-loader": "^1.1.11",

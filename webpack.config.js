@@ -81,6 +81,14 @@ module.exports = {
             chunks: ['test'],
             filename: '../../test/index.html' //relative to root of the application
         }),
+        new HtmlWebpackPlugin({
+            hash: true,
+            inject: 'head',
+            title: 'Upload',
+            template: 'ejs-compiled-loader!./src/upload/upload.ejs',
+            chunks: ['root'],
+            filename: '../../upload/index.html' //relative to root of the application
+        }),
         new CopyWebpackPlugin(
             [{
                 //context: '../source/'

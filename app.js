@@ -15,7 +15,7 @@ var auth 	= require('./bin/auth.js');			// Authentication middleware using Passp
 var users 	= require('./bin/users.js');	// Router for User Management
 var charts 	= require('./src/charts/charts-server.js');	// Router for charts Management
 var test 	= require('./src/test/test-server.js');	// Router for test Management
-
+var upload 	= require('./src/upload/upload-server.js');	// Router for upload Management
 
 app.use( favicon(path.join(dirHTML, 'public/images/favicon.ico')));
 app.use( '/public'                      , express.static(path.join(dirHTML, 'public')));
@@ -28,6 +28,7 @@ app.get( '/login*'  , (req,res)=>{ res.sendFile(path.join(dirHTML,'login.html'))
 app.use( "/users"   , auth.alreadyLoggedIn ,users)
 app.use( "/charts"  ,charts)
 app.use( "/test"    , test)
+app.use( "/upload"   , upload)
 
 app.use(function(req, res, next) {
 	var message ="<p>Invalid URL! Your session is being logged! Unauthorized access to this site is strictly prohibited!</p>"
