@@ -16,8 +16,6 @@ var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
 var session = require('express-session');
 var log = require("ucipass-logger")("www")
-log.transports.console.level	= config.get('www.debug_console')
-log.transports.file.level		= config.get('www.debug_file')
 
 // SESSION SELECTION
 var mySession

@@ -118,7 +118,10 @@ export default class Draw {
               },
               data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
           },
-          yAxis: {},
+          yAxis: {
+              min:'dataMin',
+              max:'dataMax'
+          },
           series: [
               {
                   name: 'Max',
@@ -145,16 +148,37 @@ export default class Draw {
       let arrMin = []
       let arrAvg = []
       msg.data.forEach(element => {
-          arrLabel.push(element.label ?element.label : "" )
-          arrAvg.push(element.avg)
-          arrMax.push(element.max)
-          arrMin.push(element.min)          
+        if       ( element.label && msg.formatName == "seconds"){
+            let time = moment(element.label, msg.format).format("MMM/DD HH:mm:ssA")
+            arrLabel.push(time)
+        }else if ((element.label && msg.formatName == "minutes")){
+            let time = moment(element.label, msg.format).format("MMM/DD HH:mmA")
+            arrLabel.push(time)
+        }else if ((element.label && msg.formatName == "hours")){
+            let time = moment(element.label, msg.format).format("MMM/DD HH:00A")
+            arrLabel.push(time)
+        }else if ((element.label && msg.formatName == "days")){
+            let time = moment(element.label, msg.format).format("YYYY/MMM/DD")
+            arrLabel.push(time)
+        }else if ((element.label && msg.formatName == "weeks")){
+            let time = moment(element.label, msg.format).format("YYYY/MMM/DD")
+            arrLabel.push(time)
+        }else if ((element.label)){
+            arrLabel.push(element.label)
+        }else{
+            arrLabel.push("")
+        }
+        arrAvg.push(element.avg)
+        arrMax.push(element.max)
+        arrMin.push(element.min)          
       });
-      this.option.title.text = msg.name + " - " + msg.format
+      this.option.title.text = msg.name + " - " + msg.formatName
       this.option.series[0].data = arrMax
       this.option.series[1].data = arrAvg
       this.option.series[2].data = arrMin
       this.option.xAxis.data = arrLabel
+      this.option.yAxis.min = Math.floor(msg.minset)
+      this.option.yAxis.max = Math.ceil(msg.maxset)
       this.chart.setOption(this.option);
   }    
 }

@@ -19,7 +19,7 @@ var json = {
 		"attributes":{
 			"cmd":"log",
             "data":4,
-            "logname":"random"
+            "logname":"pump-level"
 		}		
 	}
 }
@@ -62,7 +62,7 @@ function postLoop(){
     setInterval(()=>{ 
         //var random = Math.floor(Math.random()*10);
         var random = Math.random()*10;
-        json.data.attributes.data = random
+        json.data.attributes.data = random+10
         console.log("Chart log sent:",random,new Date())
         var jar = request.jar()
         request.post(
