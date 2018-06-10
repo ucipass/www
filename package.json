@@ -1,6 +1,6 @@
 {
   "name": "www",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Simple web server",
   "main": "app.js",
   "bin": {
@@ -25,7 +25,7 @@
     "node-forge": "^0.7.5",
     "style-loader": "^0.21.0",
     "supertest": "^3.1.0",
-    "webpack": "^4.11.1",
+    "webpack": "^4.12.0",
     "webpack-cli": "^2.1.5"
   },
   "bugs": {
@@ -38,6 +38,7 @@
     "axios": "^0.18.0",
     "body-parser": "^1.18.3",
     "bootstrap": "^4.1.1",
+    "config": "^1.30.0",
     "connect-sqlite3": "^0.9.11",
     "cookie-parser": "^1.4.3",
     "copy-webpack-plugin": "^4.5.1",
@@ -79,7 +80,7 @@
     "sqlite3": "^4.0.0",
     "tough-cookie": "^2.4.2",
     "ucipass-chart": "^2.2.0",
-    "ucipass-logger": "^1.0.1",
+    "ucipass-logger": "^1.0.3",
     "winston": "^2.4.2"
   }
 }

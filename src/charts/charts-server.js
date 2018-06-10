@@ -1,4 +1,3 @@
-
 /************************************************************************
 Replies to valid JSON requests:
 {	"data": // LOG
@@ -13,6 +12,7 @@ Replies to valid JSON requests:
 	}
 }
 *************************************************************************/
+const config = require ("config")
 const appRoot = require('app-root-path').path
 const MODULE_NAME = "charts"
 const DEBUG_LEVEL = "debug"
@@ -26,8 +26,7 @@ const moment = require("moment")
 const winston = require('winston')
 const JSONData = require( path.join( dirBIN,'jsondata.js'));
 const Datalog = require('ucipass-chart')
-const log = require("ucipass-logger")("MODULE_NAME");
-log.transports.console.level = "debug"
+const log = require("ucipass-logger")(MODULE_NAME);
 const {promisify} = require('util');
 const readdirAsync = promisify(fs.readdir);
 //const log = new (winston.Logger)({transports: [ new (winston.transports.Console)({level:DEBUG_LEVEL}) ]});
@@ -41,7 +40,7 @@ function charts(req, res) {	// All data is posted here with the exception if log
 	let ioData = new JSONData();
 	if (req.body.data){
 		ioData.setjson(req.body);
-		log.info("RECV:",ioData.id(),ioData.att().cmd);
+		log.debug("RECV:",ioData.id(),ioData.att().cmd);
 		log.debug("RECV ATT:",ioData.att());
 	}
 	else{
@@ -50,7 +49,7 @@ function charts(req, res) {	// All data is posted here with the exception if log
 		return;
 	}
 	if (ioData.cmd() === "log") {
-		log.info(ioData.att().data)
+		log.info("RECV LOG NAME:",ioData.att().logname,"TIME:", new Date(),"DATA:",ioData.att().data)
 		let logname = ioData.att().logname ? ioData.att().logname : "default"
 		let value = parseFloat(ioData.att().data)
 		let curLog = logList.find((item)=> item.logname == logname)
@@ -73,7 +72,7 @@ function charts(req, res) {	// All data is posted here with the exception if log
 		ioData.json.error = null;
 		ioData.json.data.type = ioData.json.data.type+'-reply';
 		ioData.json.data.attributes.msg = "This is a reply message from the server";
-		log.info('SEND:', ioData.id(),  ioData.cmd(), "reply");
+		log.debug('SEND:', ioData.id(),  ioData.cmd(), "reply");
 		res.json(ioData.getjson()); //THIS IS WHERE THE RESPONSE IS SENT
 	}
 	else if (ioData.cmd() === "getdata") {
@@ -91,7 +90,7 @@ function charts(req, res) {	// All data is posted here with the exception if log
 			ioData.json.data.attributes.data = msg;
 			ioData.json.data.type = ioData.json.data.type+'-reply';
 			ioData.json.error = null;
-			log.info('SEND:', ioData.id(),  ioData.cmd(), "reply");
+			log.debug('SEND CHART LIST:', ioData.id(),  ioData.cmd(), "reply");
 			res.json(ioData.getjson()); //THIS IS WHERE THE RESPONSE IS SENT
 			log.debug("CHART: Finish Send", new Date())
 		}else{
@@ -115,7 +114,7 @@ function charts(req, res) {	// All data is posted here with the exception if log
 			.then(()=>{
 				log.debug("CHART: Finish all promises", new Date())
 				let msg = {name:logname}
-				log.info("GET DATA REQ",ioData.json.data)
+				log.debug("GET DATA REQ",ioData.json.data)
 				msg.sec = newLog.logSec.readMemLog()
 				msg.min = newLog.logMin.readMemLog()
 				msg.hour = newLog.logHour.readMemLog()
@@ -125,7 +124,7 @@ function charts(req, res) {	// All data is posted here with the exception if log
 				ioData.json.data.attributes.data = msg;
 				ioData.json.data.type = ioData.json.data.type+'-reply';
 				ioData.json.error = null;
-				log.info('SEND:', ioData.id(),  ioData.cmd(), "reply");
+				log.debug('SEND:', ioData.id(),  ioData.cmd(), "reply");
 				res.json(ioData.getjson()); //THIS IS WHERE THE RESPONSE IS SENT
 				log.debug("CHART: Finish Send", new Date())
 			})
@@ -135,7 +134,7 @@ function charts(req, res) {	// All data is posted here with the exception if log
 		}
 	}
 	else if (ioData.cmd() === "getcharts") {
-		log.info("GET DATA REQ",ioData.json.data);
+		log.debug("GET DATA REQ",ioData.json.data);
 		(async()=>{
 			let dirlist = await readdirAsync(dirLog)
 			let loglist = dirlist
@@ -146,7 +145,7 @@ function charts(req, res) {	// All data is posted here with the exception if log
 			ioData.json.data.attributes.data = loglist;
 			ioData.json.data.type = ioData.json.data.type+'-reply';
 			ioData.json.error = null;
-			log.info('SEND:', ioData.id(),  ioData.cmd(), "reply");
+			log.debug('SEND:', ioData.id(),  ioData.cmd(), "reply");
 			res.json(ioData.getjson()); //THIS IS WHERE THE RESPONSE IS SENT				
 		})();
 	}

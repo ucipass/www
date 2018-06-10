@@ -1,3 +1,11 @@
+const appRoot  = require('app-root-path').path
+const config 	= require('config');
+const port 		= config.get('www.port');
+const secretKey = config.get('www.secretKey');
+const message 	= config.get('www.message');
+const sessionT	= config.get('www.session');
+
+
 var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
@@ -6,25 +14,33 @@ var path = require('path');
 var favicon = require('serve-favicon');
 var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
-var secretKey = "SuperSecretKey123!" ;
-var session = require('express-session');	
-// MEMORY SESSION STORE
-//var sessionstore = require('sessionstore');
-//var mySessionStore = new sessionstore.createSessionStore();  // Sessionstore in memory
-/*var mySession = {
-	store: mySessionStore,  
-	secret: secretKey,  
-	saveUninitialized: true, 
-	resave: true
-};*/
-// SQLITE3 SESSION STORE
-var SQLiteStore = require('connect-sqlite3')(session); // Optional sessionstore
-var mySQLiteStore = new SQLiteStore({db: 'sessions.db', dir: path.join( __dirname, "..","db") })
-var mySession = { store: mySQLiteStore,
-	secret: secretKey,
-	saveUninitialized: true, 
-	resave: true,
-	cookie: { httpOnly: true, maxAge:  24 * 60 * 60 * 1000 } /* 1 day*/  }
+var session = require('express-session');
+var log = require("ucipass-logger")("www")
+log.transports.console.level	= config.get('www.debug_console')
+log.transports.file.level		= config.get('www.debug_file')
+
+// SESSION SELECTION
+var mySession
+var mySessionStore
+if (sessionT == "sqlite3"){
+	var SQLiteStore = require('connect-sqlite3')(session); // Optional sqlite sessionstore
+	mySessionStore = new SQLiteStore({db: 'sessions.db', dir: path.join( appRoot ,"db") })
+	mySession = { store: mySessionStore,
+		secret: secretKey,
+		saveUninitialized: true, 
+		resave: true,
+		cookie: { httpOnly: true, maxAge:  24 * 60 * 60 * 1000 } /* 1 day*/  }
+}else{
+	var MemSessionstore = require('sessionstore');
+	mySessionStore = new MemSessionstore.createSessionStore();  // Sessionstore in memory
+	mySession = {
+		store: mySessionStore,  
+		secret: secretKey,  
+		saveUninitialized: true, 
+		resave: true
+	};
+}
+
 
 // GEO IP
 var requestIp = require('request-ip');
@@ -38,8 +54,6 @@ app.use(function(req,res,next){// Adds req.clientCountry;
 
 			
 // LOGGING
-var log = require("./logger.js")("www")
-log.transports.console.level = "error"
 log.stream =   { write: function(message, encoding) {
 	if (message.indexOf(' 404 ') == -1) log.info(message.trim())
 	else log.error(message.trim())
@@ -68,7 +82,7 @@ module.exports.app			= app;			//used by app.js
 module.exports.server		= server;		//used by app.js and sio.js
 module.exports.mySession	= mySession;	//used by auth.js
 
-server.listen(3000, function () {
-        console.log('Node JS listening on port 3000!');
+server.listen(port, function () {
+        console.log(message);
 		});
 var sio = require('./sio.js');

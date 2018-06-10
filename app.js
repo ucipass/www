@@ -1,5 +1,5 @@
-var fs    = require("fs")
-var path    = require("path")
+var fs      = require("fs")
+var path    = require("path") 
 var dirApp  = require('app-root-path').path
 var dirHTML = path.join( dirApp , "dist")
 var dirDB   = path.join( dirApp , "db")
@@ -10,7 +10,7 @@ if (!fs.existsSync(dirLOG)){ fs.mkdirSync(dirLOG);}
 var express = require('express')		// Express.js
 var favicon = require('serve-favicon');
 var app     = require('./bin/www.js').app		// Express.js App
-var server     = require('./bin/www.js').server		// Express.js App
+var server  = require('./bin/www.js').server		// Express.js App
 var auth 	= require('./bin/auth.js');			// Authentication middleware using Passport (using "app")
 var users 	= require('./bin/users.js');	// Router for User Management
 var charts 	= require('./src/charts/charts-server.js');	// Router for charts Management
@@ -26,9 +26,9 @@ app.post('/logout', auth.logout); //redirects to login page
 app.get( '/'        , (req,res)=>{ res.sendFile(path.join(dirHTML,'index.html'))})	
 app.get( '/login*'  , (req,res)=>{ res.sendFile(path.join(dirHTML,'login.html'))})
 app.use( "/users"   , auth.alreadyLoggedIn ,users)
-app.use( "/charts"  ,charts)
+app.use( "/charts"  , charts)
 app.use( "/test"    , test)
-app.use( "/upload"   , upload)
+app.use( "/upload"  , upload)
 
 app.use(function(req, res, next) {
 	var message ="<p>Invalid URL! Your session is being logged! Unauthorized access to this site is strictly prohibited!</p>"

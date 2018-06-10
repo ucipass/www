@@ -1,0 +1,16 @@
+{
+"www": {
+    "port"      :  3000,
+    "secretKey" : "SuperSecretKey123!",
+    "session"   : "sqlite3",
+    "sessionalt1"   : "memory",
+    "sessionalt2"   : "files",
+    "message"       : "Node JS listening on port 3000!",
+    "debug_console" : "error",
+    "debug_file"    : "error"
+    },
+"charts": {
+    "debug_console" : "info",
+    "debug_file"    : "info"
+    }
+}
