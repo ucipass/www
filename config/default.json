@@ -11,6 +11,6 @@
     },
 "charts": {
     "debug_console" : "info",
-    "debug_file"    : "info"
+    "debug_file"    : "error"
     }
 }
