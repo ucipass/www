@@ -46,6 +46,7 @@
     "datatables.net-bs4": "^1.10.16",
     "datatables.net-dt": "^1.10.16",
     "echarts": "^4.1.0",
+    "ecstatic": "^3.2.0",
     "ejs": "^2.6.1",
     "ejs-compiled-loader": "^1.1.0",
     "ejs-render-loader": "^1.0.0",

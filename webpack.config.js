@@ -10,6 +10,7 @@ module.exports = {
         "sioclient": './src/sioclient.js',
         "test": './src/test/test-client.js',
         "charts": './src/charts/charts-client.js',
+        "upload": './src/upload/upload-client.js',
         "clock": './src/clock.js'
     },
     output: {
@@ -86,7 +87,7 @@ module.exports = {
             inject: 'head',
             title: 'Upload',
             template: 'ejs-compiled-loader!./src/upload/upload.ejs',
-            chunks: ['root'],
+            chunks: ['root','upload'],
             filename: '../../upload/index.html' //relative to root of the application
         }),
         new CopyWebpackPlugin(

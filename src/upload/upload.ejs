@@ -7,14 +7,26 @@
   </head>
   <body>
     <% include ./src/navbar.html %>
-    <form ref='uploadForm' 
-      id='uploadForm' 
-      action='upload' 
-      method='post' 
-      encType="multipart/form-data">
-        <input type="file" name="sampleFile" />
-        <input type='submit' value='Upload!' />
-    </form>   
-
+    <div class="container">
+        <form class="form-inline justify-content-center" ref='uploadForm' id='uploadForm' action='upload' method='post' encType="multipart/form-data">
+          <div class="form-group center">
+              <input class="success my-2 my-sm-0" type="file" name="sampleFile" />
+              <input class="btn btn-outline-success my-2 my-sm-0"type='submit' value='Upload!' />
+          </div>
+      </form>   
+    </div>
+    <p>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">File</th>
+            <th scope="col">Size</th>
+            <th scope="col">Date</th>
+          </tr>
+        </thead>
+        <tbody id="filetable">
+        </tbody>
+      </table>
+    </p>
   </body>
 </html>
