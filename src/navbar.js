@@ -76,7 +76,6 @@ function showLogoutBar(){
     e_user.value = ""
     e_pass.value = ""
 }
-
 async function login(){
     let user = document.getElementById("user").value
     let pass = document.getElementById("pass").value
@@ -94,12 +93,10 @@ async function login(){
         return false
     }
 }
-
 async function logout(){
     await sio.logout()
     window.location.href = "/"
 }
-
 function alert(text){
     e_modalAlertText.innerHTML = text
     $("#modalAlert").modal("show")

@@ -6,11 +6,19 @@
     "sessionalt1"   : "memory",
     "sessionalt2"   : "files",
     "message"       : "Node JS listening on port 3000!",
-    "debug_console" : "error",
+    "debug_console" : "debug",
     "debug_file"    : "error"
     },
 "charts": {
     "debug_console" : "info",
     "debug_file"    : "error"
+    },
+"files": {
+    "directory" : "fileserver",
+    "debug_console" : "debug",
+    "debug_file"    : "error"
+    },
+"upload": {
+    "directory" : "fileserver"
     }
 }

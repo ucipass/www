@@ -10,11 +10,12 @@ module.exports = {
         "sioclient": './src/sioclient.js',
         "test": './src/test/test-client.js',
         "charts": './src/charts/charts-client.js',
-        "upload": './src/upload/upload-client.js',
+        "files": './src/files/files-client.js',
         "clock": './src/clock.js'
     },
     output: {
-        filename: '[name][hash].js',
+        filename: '[name].js',
+        //filename: '[name][hash].js',
         path: rootDir
     },
     watch: true,
@@ -34,7 +35,8 @@ module.exports = {
                     {
                         loader: 'file-loader',
                         options: {
-                          name: '../../public/images/[name].[hash].[ext]'
+                            //name: '../../public/images/[name].[hash].[ext]'
+                            name: '../../public/images/[name].[ext]'
                         }
                       }
                 ]
@@ -85,10 +87,10 @@ module.exports = {
         new HtmlWebpackPlugin({
             hash: true,
             inject: 'head',
-            title: 'Upload',
-            template: 'ejs-compiled-loader!./src/upload/upload.ejs',
-            chunks: ['root','upload'],
-            filename: '../../upload/index.html' //relative to root of the application
+            title: 'Files',
+            template: 'ejs-compiled-loader!./src/files/files.ejs',
+            chunks: ['root','files'],
+            filename: '../../files/index.html' //relative to root of the application
         }),
         new CopyWebpackPlugin(
             [{

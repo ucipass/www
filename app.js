@@ -15,20 +15,21 @@ var auth 	= require('./bin/auth.js');			// Authentication middleware using Passp
 var users 	= require('./bin/users.js');	// Router for User Management
 var charts 	= require('./src/charts/charts-server.js');	// Router for charts Management
 var test 	= require('./src/test/test-server.js');	// Router for test Management
-var upload 	= require('./src/upload/upload-server.js');	// Router for upload Management
+var files 	= require('./src/files/files-server.js');	// Router for upload Management
 
 app.use( favicon(path.join(dirHTML, 'public/images/favicon.ico')));
 app.use( '/public'                      , express.static(path.join(dirHTML, 'public')));
-app.use( '/private',auth.alreadyLoggedIn, express.static(path.join(dirHTML, 'private')));
 app.post('/login' , auth.login ); //redirects to login page or original URL based on ?redir=
 app.post('/logout', auth.logout); //redirects to login page
+app.use( '/fileserver'                      , express.static(path.join(dirApp, 'fileserver')));
+app.use( '/private',auth.alreadyLoggedIn, express.static(path.join(dirHTML, 'private')));
 
 app.get( '/'        , (req,res)=>{ res.sendFile(path.join(dirHTML,'index.html'))})	
 app.get( '/login*'  , (req,res)=>{ res.sendFile(path.join(dirHTML,'login.html'))})
-app.use( "/users"   , auth.alreadyLoggedIn ,users)
-app.use( "/charts"  , charts)
 app.use( "/test"    , test)
-app.use( "/upload"  , upload)
+app.use( "/users"   , auth.alreadyLoggedIn , users)
+app.use( "/charts"  , auth.alreadyLoggedIn , charts)
+app.use( "/files"   , auth.alreadyLoggedIn , files)
 
 app.use(function(req, res, next) {
 	var message ="<p>Invalid URL! Your session is being logged! Unauthorized access to this site is strictly prohibited!</p>"
