@@ -1,7 +1,7 @@
 let app = require("./www.js").app
 let server = require("./www.js").server
 var session = require("./www.js").mySession
-var log = require("./logger.js")("www")
+var log = require("ucipass-logger")("sio")
 let sio = require('socket.io')(server)
 let clients = []
 

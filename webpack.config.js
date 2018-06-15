@@ -90,7 +90,7 @@ module.exports = {
             inject: 'head',
             title: 'Settings',
             template: 'ejs-compiled-loader!./src/settings/settings.ejs',
-            chunks: ['root','settings'],
+            chunks: ['settings'],
             filename: '../../settings/index.html' //relative to root of the application
         }),
         new HtmlWebpackPlugin({
@@ -98,7 +98,7 @@ module.exports = {
             inject: 'head',
             title: 'Files',
             template: 'ejs-compiled-loader!./src/files/files.ejs',
-            chunks: ['root','files'],
+            chunks: ['files'],
             filename: '../../files/index.html' //relative to root of the application
         }),
         new CopyWebpackPlugin(
