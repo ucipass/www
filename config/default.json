@@ -1,24 +1,28 @@
 {
-"www": {
-    "port"      :  3000,
-    "secretKey" : "SuperSecretKey123!",
-    "session"   : "sqlite3",
-    "sessionalt1"   : "memory",
-    "sessionalt2"   : "files",
-    "message"       : "Node JS listening on port 3000!",
-    "debug_console" : "debug",
-    "debug_file"    : "error"
-    },
-"charts": {
-    "debug_console" : "info",
-    "debug_file"    : "error"
-    },
-"files": {
-    "directory" : "fileserver",
-    "debug_console" : "debug",
-    "debug_file"    : "error"
-    },
-"upload": {
-    "directory" : "fileserver"
-    }
+  "www": {
+    "port": "3000",
+    "session": "sqlite3",
+    "message": "Node JS listening on port 3000!",
+    "secretKey": "SuperSecretKey123!",
+    "debug_file": "error",
+    "sessionalt1": "memory",
+    "sessionalt2": "files",
+    "debug_console": "error"
+  },
+  "files": {
+    "directory": "fileserver",
+    "debug_file": "error",
+    "debug_console": "debug"
+  },
+  "upload": {
+    "directory": "fileserver"
+  },
+  "charts": {
+    "debug_file": "error",
+    "debug_console": "info"
+  },
+  "settings": {
+    "debug_file": "error",
+    "debug_console": "error"
+  }
 }

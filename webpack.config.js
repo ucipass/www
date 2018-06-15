@@ -11,6 +11,7 @@ module.exports = {
         "test": './src/test/test-client.js',
         "charts": './src/charts/charts-client.js',
         "files": './src/files/files-client.js',
+        "settings": './src/settings/settings-client.js',
         "clock": './src/clock.js'
     },
     output: {
@@ -45,7 +46,7 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            hash: true,
+            hash: false,
             inject: 'head',
             title: 'Charts',
             template: 'ejs-compiled-loader!./src/charts/charts.ejs',
@@ -53,7 +54,7 @@ module.exports = {
             filename: '../../charts/index.html' //relative to root of the application
         }),
         new HtmlWebpackPlugin({
-            hash: true,
+            hash: false,
             inject: 'head',
             title: 'Users',
             template: 'ejs-compiled-loader!./src/users.ejs',
@@ -61,7 +62,7 @@ module.exports = {
             filename: '../../users/index.html' //relative to root of the application
         }),
         new HtmlWebpackPlugin({
-            hash: true,
+            hash: false,
             inject: 'head',
             title: 'Login',
             template: 'ejs-compiled-loader!./src/login.ejs',
@@ -69,7 +70,7 @@ module.exports = {
             filename: '../../login.html' //relative to root of the application
         }),
         new HtmlWebpackPlugin({
-            hash: true,
+            hash: false,
             inject: 'head',
             title: 'Home',
             template: 'ejs-compiled-loader!./src/root.ejs',
@@ -77,7 +78,7 @@ module.exports = {
             filename: '../../index.html' //relative to root of the application
         }),
         new HtmlWebpackPlugin({
-            hash: true,
+            hash: false,
             inject: 'head',
             title: 'Test',
             template: 'ejs-compiled-loader!./src/test/test.ejs',
@@ -85,7 +86,15 @@ module.exports = {
             filename: '../../test/index.html' //relative to root of the application
         }),
         new HtmlWebpackPlugin({
-            hash: true,
+            hash: false,
+            inject: 'head',
+            title: 'Settings',
+            template: 'ejs-compiled-loader!./src/settings/settings.ejs',
+            chunks: ['root','settings'],
+            filename: '../../settings/index.html' //relative to root of the application
+        }),
+        new HtmlWebpackPlugin({
+            hash: false,
             inject: 'head',
             title: 'Files',
             template: 'ejs-compiled-loader!./src/files/files.ejs',

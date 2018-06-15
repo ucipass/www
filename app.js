@@ -16,6 +16,7 @@ var users 	= require('./bin/users.js');	// Router for User Management
 var charts 	= require('./src/charts/charts-server.js');	// Router for charts Management
 var test 	= require('./src/test/test-server.js');	// Router for test Management
 var files 	= require('./src/files/files-server.js');	// Router for upload Management
+var settings 	= require('./src/settings/settings-server.js');	// Router for upload Management
 
 app.use( favicon(path.join(dirHTML, 'public/images/favicon.ico')));
 app.use( '/public'                      , express.static(path.join(dirHTML, 'public')));
@@ -30,6 +31,7 @@ app.use( "/test"    , test)
 app.use( "/users"   , auth.alreadyLoggedIn , users)
 app.use( "/charts"  , auth.alreadyLoggedIn , charts)
 app.use( "/files"   , auth.alreadyLoggedIn , files)
+app.use( "/settings"   , settings)
 
 app.use(function(req, res, next) {
 	var message ="<p>Invalid URL! Your session is being logged! Unauthorized access to this site is strictly prohibited!</p>"
