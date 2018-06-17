@@ -15,8 +15,8 @@
   },
   "files": {
     "directory": "fileserver",
-    "debug_file": "error",
-    "debug_console": "error"
+    "debug_file": "debug",
+    "debug_console": "debug"
   },
   "upload": {
     "directory": "fileserver"

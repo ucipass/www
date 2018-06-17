@@ -38,7 +38,14 @@ router.post('/upload', function(req, res) {
 		return res.status(400).send('Error No files were uploaded.');
 	}
 	// The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
-	let currentFile = req.files.sampleFile;
+	let currentFile = req.files.file;
+	
+	if (!currentFile){
+		log.error("No file provided with upload")
+		return res.status(500).send("NO FILE PROVIDED");
+	}else{
+		log.debug("File to be uploaded",currentFile.name)
+	}
 	// Use the mv() method to place the file somewhere on your server
 	currentFile.mv( path.join(dirUPLOAD,currentFile.name), function(err) {
 		if (err){

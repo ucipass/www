@@ -8,7 +8,7 @@
   <body>
         <div id="navbar-main">
       <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top" role="navigation">
-          <a class="navbar-brand" href="#">Home</a>
+          <a class="navbar-brand" href="/">Home</a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>
@@ -46,15 +46,66 @@
         </div>
       </div>
     </div>
-    <div class="container">
-        <form class="form-inline justify-content-center" ref='uploadForm' id='uploadForm' action='files/upload' method='post' encType="multipart/form-data">
-          <div class="form-group center">
-              <input class="success my-2 my-sm-0" type="file" name="sampleFile" />
-              <input class="btn btn-outline-success my-2 my-sm-0"type='submit' value='Upload!' />
+    <!-- UPLOAD MODAL -->
+    <div class="modal fade" id="modalUploadForm" tabindex="-2" role="dialog" aria-labelledby="modalUploadFormLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalUploadFormLabel">Upload Files</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <!-- MODAL BODY -->
+              <div class="table table-striped" class="files" id="previews">
+                  <div id="template" class="file-row">
+                    <!-- This is used as the file preview template -->
+                      <span class="preview"><img data-dz-thumbnail /></span>
+                      <p class="name" data-dz-name></p>
+                      <strong class="error text-danger" data-dz-errormessage></strong>
+                      <p class="size" data-dz-size></p>
+                      <button class="btn btn-primary start">
+                          <i class="glyphicon glyphicon-upload"></i>
+                          <span>Start</span>
+                      </button>
+                      <button data-dz-remove class="btn btn-warning cancel">
+                          <i class="glyphicon glyphicon-ban-circle"></i>
+                          <span>Cancel</span>
+                      </button>
+                      <button data-dz-remove class="btn btn-danger delete">
+                        <i class="glyphicon glyphicon-trash"></i>
+                        <span>Delete</span>
+                      </button>
+            
+                    <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                      <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+                    </div>
+            
+                  </div>
+                </div>              
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-primary start fileinput-button">Files...</button>
+              <button id="startall" class="btn btn-primary start">Upload</button>
+              <button id="cancelall" class="btn btn-primary cancel">Cancell</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>                
+            </div>
+            <div class="modal-footer">
+                <div id="total-progress" class="progress progress-striped active" style="width:100%;" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                  <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+                </div>  
+            </div>
           </div>
-      </form>   
+        </div>
     </div>
-    <p>
+    <!-- CHOOSER BUTTONS -->
+    <div class="container text-center">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalUploadForm">Upload</button>
+        <button type="button" class="btn btn-primary" onClick="window.location.reload()" >Refresh</button>
+    </div>
+    <!-- FILES -->
+    <div>
       <table class="table">
         <thead>
           <tr>
@@ -67,6 +118,6 @@
         <tbody id="filetable">
         </tbody>
       </table>
-    </p>
+    </div>
   </body>
 </html>
