@@ -6,7 +6,6 @@
     "secretKey": "SuperSecretKey123!",
     "debug_file": "error",
     "sessionalt1": "memory",
-    "sessionalt2": "files",
     "debug_console": "error"
   },
   "sio": {

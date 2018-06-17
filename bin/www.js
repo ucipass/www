@@ -28,7 +28,8 @@ if (sessionT == "sqlite3"){
 		saveUninitialized: true, 
 		resave: true,
 		cookie: { httpOnly: true, maxAge:  24 * 60 * 60 * 1000 } /* 1 day*/  }
-}else{
+}
+else{
 	var MemSessionstore = require('sessionstore');
 	mySessionStore = new MemSessionstore.createSessionStore();  // Sessionstore in memory
 	mySession = {
@@ -38,7 +39,7 @@ if (sessionT == "sqlite3"){
 		resave: true
 	};
 }
-
+	
 
 // GEO IP
 var requestIp = require('request-ip');
