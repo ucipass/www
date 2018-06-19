@@ -1,0 +1,4 @@
+{
+"admin":{"firstName":"admin","lastName":"admin","password":"7ba9293f74fb0b610b7cce1494530ba975d15348ffec0b478b143fbe198bd917","salt":"1234567890"},
+"test":{"firstName":"test","lastName":"test","password":"test","salt":"1234567890"}
+}

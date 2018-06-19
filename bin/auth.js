@@ -1,7 +1,12 @@
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var app = require('./www.js').app;
-var log = require("./logger.js")("auth")
+var appRoot = require("app-root-path").path
+var config = require("config")
+var path = require("path")
+var log = require("ucipass-logger")("auth")
+var File = require("ucipass-file")
+var auth = {} // This is where all exported functions are defined
 log.transports.console.level = "info"
 app.use(passport.initialize());
 app.use(passport.session());
@@ -9,9 +14,10 @@ app.use(passport.session());
 passport.use(new LocalStrategy(function(username, password, done) {  // THIS MUST come from POST on body.username and body.passport
 	//return done(null, {id:"test"});
 	log.debug("LocalStrategy: Attempt with User:",username,password);
-	var sqlite3 = require('sqlite3');
-	var db = new sqlite3.Database('./db/users.db');
-	db.get('SELECT id,username,password,salt FROM users WHERE id = ?', username, function(err, row) {
+	//var sqlite3 = require('sqlite3');
+	//var db = new sqlite3.Database('./db/users.db');
+	auth.getUser(username)
+	.then((row)=>{
 		if (!row) {
 			log.error("LocalStrategy FAILED: Username:",username,"does not exist!");
 			return done(null, false);
@@ -29,8 +35,12 @@ passport.use(new LocalStrategy(function(username, password, done) {  // THIS MUS
 			log.error("LocalStrategy - FAILED: Invalid password for Username:",username,"Password:",password);
 			return done(null, false);
 			}
-	  });
-	}))
+	})
+	.catch((err)=>{
+		log.error("SQL Database Query Error:",err)
+		return done(null, false);
+	})
+}))
 
 passport.serializeUser(function(user, done) {
 	log.debug("Serialize:",user);		// THIS IS WHERE THE user id is supposed to be put in an external session db)
@@ -44,7 +54,7 @@ passport.deserializeUser(function(id, done) {
 	return done(null, {id:id});    // THIS IS WHERE THE user id is supposed to be checked against an external session db)
 	})
 
-var auth = {}
+
 auth.alreadyLoggedIn = function(req, res, next) {
 	if (req.isAuthenticated()){
 		//console.log("AUTH - ALREADY LOGGED IN");
@@ -80,5 +90,46 @@ auth.logout = function(req, res, next) {
 		//res.redirect('/login.html');	// redir is sent from the logout header via JSON
 		});								
 	}
+
+auth.getUser = async function (username){
+	let userdb = config.get("users.database")
+	if ( userdb == "sqlite3"){
+		return auth.getUserSqlite3(username)
+	}
+	else if ( userdb == "json"){
+		return auth.getUserJSON(username)
+	} else {
+		reject("Users Database configuration file error")
+	}
+}
+
+auth.getUserSqlite3 = async function (username){
+	return new Promise((resolve,reject)=>{
+		var sqlite3 = require('sqlite3');
+		var db = new sqlite3.Database('./db/users.db');
+		db.get('SELECT id,username,password,salt FROM users WHERE id = ?', username, function(err, row) {
+			if (err) {
+				reject(err)
+			}
+			else{
+				resolve(row)
+			}
+		})
+	})
+}
+
+auth.getUserJSON = async function getUserJSON(username){
+	return new Promise((resolve,reject)=>{
+		let filename = path.join(appRoot,config.get("users.directory"),config.get("users.file"))
+		let userfile = new File(filename)
+		userfile.readString()
+		.then((userstring)=>{
+			let users = JSON.parse(userstring)
+			let row = users[username]
+			resolve(row)
+		})
+		.catch(reject)
+	})
+}
 
 module.exports = auth ;

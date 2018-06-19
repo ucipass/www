@@ -19,19 +19,28 @@ var log = require("ucipass-logger")("www")
 
 // SESSION SELECTION
 var mySession
-var mySessionStore
 if (sessionT == "sqlite3"){
 	var SQLiteStore = require('connect-sqlite3')(session); // Optional sqlite sessionstore
-	mySessionStore = new SQLiteStore({db: 'sessions.db', dir: path.join( appRoot ,"db") })
+	var mySessionStore = new SQLiteStore({db: 'sessions.db', dir: path.join( appRoot ,"db") })
 	mySession = { store: mySessionStore,
 		secret: secretKey,
+		saveUninitialized: false, 
+		resave: false,
+		cookie: { secure: false, httpOnly: true, maxAge:  24 * 60 * 60 * 1000 } /* 1 day*/  }
+}
+else if(sessionT == "files"){
+	var FileStore = require('session-file-store')(session)
+	var mySessionStore = new FileStore;  // Sessionstore in memory
+	mySession = {
+		store: mySessionStore,  
+		secret: secretKey,  
 		saveUninitialized: true, 
-		resave: true,
-		cookie: { httpOnly: true, maxAge:  24 * 60 * 60 * 1000 } /* 1 day*/  }
+		resave: true
+	};
 }
 else{
 	var MemSessionstore = require('sessionstore');
-	mySessionStore = new MemSessionstore.createSessionStore();  // Sessionstore in memory
+	var mySessionStore = new MemSessionstore.createSessionStore();  // Sessionstore in memory
 	mySession = {
 		store: mySessionStore,  
 		secret: secretKey,  

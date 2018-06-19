@@ -2,11 +2,15 @@
   "www": {
     "port": "3000",
     "message": "Node JS listening on port 3000!",
-    "session": "sqlite3",
+    "session2": "sqlite3",
+    "session": "memory",
     "secretKey": "SuperSecretKey123!",
     "debug_file": "error",
-    "sessionalt1": "memory",
     "debug_console": "error"
+  },
+  "auth": {
+    "debug_file": "error",
+    "debug_console": "debug"
   },
   "sio": {
     "debug_file": "error",
@@ -27,5 +31,11 @@
   "settings": {
     "debug_file": "error",
     "debug_console": "error"
+  },
+  "users":{
+    "directory" : "db",
+    "file"  : "users.json",
+    "database2"  :"sqlite3",
+    "database" :"json"
   }
 }
