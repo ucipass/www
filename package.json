@@ -3,9 +3,6 @@
   "version": "3.3.1",
   "description": "Simple web server",
   "main": "app.js",
-  "bin": {
-    "www": "auth.js"
-  },
   "directories": {
     "test": "test"
   },
