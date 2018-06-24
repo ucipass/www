@@ -12,9 +12,28 @@ var username = "admin"
 var password = "admin"
 process.setMaxListeners(15)
 
-describe('Web Server Test', function(){
+describe.only('Web Server Test', function(){
+    
+    var mycookie;
     before(()=>{
         app = require(path.join(__dirname,"..","index.js"))
+        /*
+        supertest(app)
+        .post('/login')
+        .send({
+          username: 'admin',
+          password: 'admin'
+        })
+        .end(function (err, res) {
+          if (err) {
+            return done(err);
+          }
+  
+          //res.body.should.to.have.property('token');
+          mycookie = res.headers["set-cookie"][0]
+          done();
+        });
+        */
     })
     after((done)=>{
         agent
@@ -26,10 +45,6 @@ describe('Web Server Test', function(){
             }
             app.close(()=>{done()})
         })
-    })
-    it("Mini Test", function(done){
-        console.log("TEST")
-        done()
     })
     it("Login Authentication as admin", function(done){
         agent
@@ -50,7 +65,7 @@ describe('Web Server Test', function(){
         agent
         //.get('/')
         //.expect(302)
-        .get('/')
+        .get('/users')
         .expect(200)
         .end(function(err, res) {
             if (err) {
@@ -59,9 +74,9 @@ describe('Web Server Test', function(){
             done()
         })
     })
-    it("Session Cookie Test", function(done){
+    it.only("Session Cookie Test", function(done){
         var jar = request.jar()
-        request({url: url, jar: jar}, function () {
+        request({url: "http://cnn.com/", jar: jar}, function (err, response, body) {
             var cookie_string = jar.getCookieString(url); // "key1=value1; key2=value2; ..."
             cookies = jar.getCookies(url);
             if ( ! cookies.length ) { done("NO COOKIES!");return}
@@ -115,7 +130,7 @@ describe('Web Server Test', function(){
             });
         return auth   
     })
-    it("POST Session Cookie Test", function(done){
+    it.skip("POST Session Cookie Test", function(done){
         var jar = request.jar()
         request({url: url, jar: jar}, function () {
             var cookie_string = jar.getCookieString(url); // "key1=value1; key2=value2; ..."
