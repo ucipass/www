@@ -12,6 +12,9 @@ const config   = require("config")
 const appRoot  = require('app-root-path').path
 const logger   = require("ucipass-logger")
 const fileUpload = require('express-fileupload');
+const multer  = require('multer')
+
+
 // GLOBAL VARIABLES
 var name = "files"
 var dirBIN   = path.join( appRoot, "bin")
@@ -19,6 +22,8 @@ var dirHTML  = path.join( appRoot, "dist", name)
 var dirPrefix = config.get(name+".directory")
 var dirUPLOAD   = path.join( appRoot,dirPrefix )
 var dirFiles = path.join( appRoot, dirPrefix)  // full path of files directory
+var upload = multer({ dest: dirUPLOAD })
+const uploadName = "clientuploads"
 var log      = logger(name)
 var JSONData = require( path.join(dirBIN, "jsondata.js"))
 var ioData   = new JSONData
@@ -31,30 +36,34 @@ if (!fs.existsSync(dirFiles)){ fs.mkdirSync(dirFiles);}
 router.get( "/"    , (req,res)=>{ 
 	res.sendFile(path.join(dirHTML,'index.html'))
 })
-router.use("/upload",fileUpload());
 
-router.post('/upload', function(req, res) {
-	if (!req.files){
-		return res.status(400).send('Error No files were uploaded.');
-	}
-	// The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
-	let currentFile = req.files.file;
-	
-	if (!currentFile){
-		log.error("No file provided with upload")
-		return res.status(500).send("NO FILE PROVIDED");
-	}else{
-		log.debug("File to be uploaded",currentFile.name)
-	}
-	// Use the mv() method to place the file somewhere on your server
-	currentFile.mv( path.join(dirUPLOAD,currentFile.name), function(err) {
-		if (err){
-			return res.status(500).send(err);
-		}else{
+router.post('/upload', upload.array(uploadName,500), function (req, res, next) {
+	let files = req.files
+	let body = req.body
+
+	for( let index in files){
+		let file = files[index]
+		let tmpfile = path.join(file.destination,file.filename)
+		let newfile = path.join(file.destination,file.originalname)
+		fs.rename(tmpfile,newfile, (err)=> {
+			if (err) {
+				return res.status(500).send(err);
+			}
 			res.redirect('/files'); // Success
-		}
-	})
-})
+		  });
+	}
+	/*
+	destination:"/tmp/"
+	encoding:"7bit"
+	fieldname:"clientuploads"
+	filename:"15d5649f4cd9ab2cac73f3b4d07886cf"
+	mimetype:"application/pdf"
+	originalname:"2601863389_841801330779_20180528_164018.pdf"
+	path:"/tmp/15d5649f4cd9ab2cac73f3b4d07886cf"
+	size:231766
+	*/
+  })
+
 router.post( '/'  , async (req,res)=>{ 
 	let ioData = new JSONData();
 	if (req.body.data){
@@ -97,5 +106,4 @@ router.post( '/'  , async (req,res)=>{
 	}
 })
 	
-
 module.exports = router;

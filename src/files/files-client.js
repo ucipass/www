@@ -12,6 +12,7 @@ import 'select2';                       // globally assign select2 fn to $ eleme
 import 'select2/dist/css/select2.css';  // optional if you have css loader
 import { resolve } from 'path';
 window.Dropzone = require('dropzone');
+const uploadName = "clientuploads"
 
 
 window.addEventListener('load', async function(){
@@ -19,6 +20,11 @@ window.addEventListener('load', async function(){
     navbar.setup(alreadyLoggedIn)
     //await new Promise(resolve => setTimeout(resolve, 1000));
   
+    // Refresh when modal is closed
+    $('#modalUploadForm').on('hidden.bs.modal', function (e) {
+      location.reload();
+   })   
+
     var previewNode = document.querySelector("#template");
     previewNode.id = "";
     var previewTemplate = previewNode.parentNode.innerHTML;
@@ -26,6 +32,8 @@ window.addEventListener('load', async function(){
     
     var myDropzone = new Dropzone(document.body, { // Make the whole body a dropzone
       url: "/files/upload", // Set the url
+      paramName: uploadName,
+      maxFilesize: 20000, //20Gbyte
       thumbnailWidth: 80,
       thumbnailHeight: 80,
       parallelUploads: 2,
@@ -66,13 +74,6 @@ window.addEventListener('load', async function(){
     document.querySelector("#cancelall").onclick = function() {
       myDropzone.removeAllFiles(true);
     };
-
-
-
-
-
-
-
 
     var ioData = new JSONData("test","files",{cmd:"dirlist"});
     window.deleteFile = function(element){

@@ -35,7 +35,7 @@
   "users":{
     "directory" : "db",
     "file"  : "users.json",
-    "database2"  :"sqlite3",
-    "database" :"json"
+    "database"  :"sqlite3",
+    "database2" :"json"
   }
 }
