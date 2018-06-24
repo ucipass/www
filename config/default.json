@@ -7,7 +7,7 @@
     "secretKey": "SuperSecretKey123!",
     "debug_file": "error",
     "debug_console": "error"
-  },
+  },  
   "auth": {
     "debug_file": "error",
     "debug_console": "debug"
@@ -33,9 +33,15 @@
     "debug_console": "error"
   },
   "users":{
-    "directory" : "db",
-    "file"  : "users.json",
-    "database"  :"sqlite3",
-    "database2" :"json"
+    "database" :"json",
+    "database2"  :"sqlite3",
+    "json":{
+      "directory" : "db",
+      "file"  : "users.json"      
+    },
+    "sqlite3":{
+      "directory" : "db",
+      "file"  : "users.db"      
+    }
   }
 }

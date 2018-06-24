@@ -10,13 +10,26 @@ var log = require("../bin/logger.js")("moccha")
 log.transports.console.level = "error"
 var username = "admin"
 var password = "admin"
+process.setMaxListeners(15)
 
 describe('Web Server Test', function(){
     before(()=>{
-        app = require(path.join(__dirname,"..","app.js"))
+        app = require(path.join(__dirname,"..","index.js"))
     })
     after((done)=>{
-        app.close(()=>{done()})
+        agent
+        .get('/')
+        .expect(200)
+        .end(function(err, res) {
+            if (err) {
+                throw err;
+            }
+            app.close(()=>{done()})
+        })
+    })
+    it("Mini Test", function(done){
+        console.log("TEST")
+        done()
     })
     it("Login Authentication as admin", function(done){
         agent

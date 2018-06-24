@@ -1,6 +1,6 @@
+var app = require('./www.js').app;
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-var app = require('./www.js').app;
 var appRoot = require("app-root-path").path
 var config = require("config")
 var path = require("path")
@@ -10,6 +10,8 @@ var auth = {} // This is where all exported functions are defined
 log.transports.console.level = "info"
 app.use(passport.initialize());
 app.use(passport.session());
+
+setup()
 
 passport.use(new LocalStrategy(function(username, password, done) {  // THIS MUST come from POST on body.username and body.passport
 	//return done(null, {id:"test"});
@@ -106,7 +108,8 @@ auth.getUser = async function (username){
 auth.getUserSqlite3 = async function (username){
 	return new Promise((resolve,reject)=>{
 		var sqlite3 = require('sqlite3');
-		var db = new sqlite3.Database('./db/users.db');
+		var dbfile = path.join( appRoot, config.get("users.sqlite3.directory"),config.get("users.sqlite3.file"))
+		var db = new sqlite3.Database(dbfile);
 		db.get('SELECT id,username,password,salt FROM users WHERE id = ?', username, function(err, row) {
 			if (err) {
 				reject(err)
@@ -120,7 +123,7 @@ auth.getUserSqlite3 = async function (username){
 
 auth.getUserJSON = async function getUserJSON(username){
 	return new Promise((resolve,reject)=>{
-		let filename = path.join(appRoot,config.get("users.directory"),config.get("users.file"))
+		var filename = path.join( appRoot, config.get("users.json.directory"),config.get("users.json.file"))
 		let userfile = new File(filename)
 		userfile.readString()
 		.then((userstring)=>{
@@ -131,5 +134,67 @@ auth.getUserJSON = async function getUserJSON(username){
 		.catch(reject)
 	})
 }
+
+async function setup(){
+	database = config.get("users.database")
+	if (database == "json"){
+		await setupJson()
+	}
+	else if (database == "sqlite3"){
+		await setupSqllite()
+	}
+}
+
+async function setupSqllite(){
+	var dbfile = path.join( appRoot, config.get("users.sqlite3.directory"),config.get("users.sqlite3.file"))
+	var f = new File(dbfile)
+	if (! await f.isFile() ){
+		var db = require('./lib_sqlite.js');
+		console.log(`database file ${dbname} does not exists! Creating.....`)
+		let json = {dbname:dbname}
+		await db.createTableIfNotExists("users",[["id","TEXT"],["username","TEXT"],["salt","TEXT"],["password","TEXT"]])(json)
+		var id = "admin"
+		var password = "admin"
+		var salt = "1234567890"
+		var crypto = require('crypto');
+		var hash = crypto.createHash('sha256');
+		hash.update(password);
+		hash.update(salt);
+		var digest = hash.digest('hex');
+		var table 	= "users"
+		var columns = ["id","username","salt","password"]
+		var newrow 	= [id,id,salt,digest]
+
+		db.sInsertRow(dbname,table,columns,newrow)
+		.then(data => {
+			console.log("First 'admin' user created")
+		})
+		.catch( e => {
+			console.log("First 'admin' user creation failed with error:",e)
+		})
+	}
+}
+
+async function setupJson(){
+	var dbfile = path.join( appRoot, config.get("users.json.directory"),config.get("users.json.file"))
+	var f = new File(dbfile)
+	if (! await f.isFile() ){
+		console.log(`database file ${dbfile} does not exists! Creating.....`)
+		var json = {"admin":{"firstName":"admin","lastName":"admin","password":"7ba9293f74fb0b610b7cce1494530ba975d15348ffec0b478b143fbe198bd917","salt":"1234567890"}}
+		f.writeString(JSON.stringify(json))
+		.then(data => {
+			console.log("First 'admin' user created")
+		})
+		.catch( e => {
+			console.log("First 'admin' user creation failed with error:",e)
+		})
+	}
+}
+
+
+
+
+
+
 
 module.exports = auth ;

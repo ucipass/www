@@ -1,6 +1,6 @@
 {
   "name": "@ucipass/www",
-  "version": "3.3.12",
+  "version": "3.3.13",
   "description": "Simple web server",
   "main": "index.js",
   "directories": {
