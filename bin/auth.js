@@ -148,6 +148,7 @@ async function setup(){
 async function setupSqllite(){
 	var dbfile = path.join( appRoot, config.get("users.sqlite3.directory"),config.get("users.sqlite3.file"))
 	var f = new File(dbfile)
+	let dbname = "users.db"
 	if (! await f.isFile() ){
 		var db = require('./lib_sqlite.js');
 		console.log(`database file ${dbname} does not exists! Creating.....`)

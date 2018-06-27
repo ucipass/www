@@ -33,8 +33,8 @@
     "debug_console": "error"
   },
   "users":{
-    "database" :"json",
-    "database2"  :"sqlite3",
+    "database2" :"json",
+    "database"  :"sqlite3",
     "json":{
       "directory" : "db",
       "file"  : "users.json"      
