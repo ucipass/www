@@ -56,7 +56,6 @@ passport.deserializeUser(function(id, done) {
 	return done(null, {id:id});    // THIS IS WHERE THE user id is supposed to be checked against an external session db)
 	})
 
-
 auth.alreadyLoggedIn = function(req, res, next) {
 	if (req.isAuthenticated()){
 		//console.log("AUTH - ALREADY LOGGED IN");
@@ -148,11 +147,10 @@ async function setup(){
 async function setupSqllite(){
 	var dbfile = path.join( appRoot, config.get("users.sqlite3.directory"),config.get("users.sqlite3.file"))
 	var f = new File(dbfile)
-	let dbname = "users.db"
 	if (! await f.isFile() ){
 		var db = require('./lib_sqlite.js');
-		console.log(`database file ${dbname} does not exists! Creating.....`)
-		let json = {dbname:dbname}
+		console.log(`database file ${dbfile} does not exists! Creating.....`)
+		let json = {dbname:dbfile}
 		await db.createTableIfNotExists("users",[["id","TEXT"],["username","TEXT"],["salt","TEXT"],["password","TEXT"]])(json)
 		var id = "admin"
 		var password = "admin"
@@ -166,7 +164,7 @@ async function setupSqllite(){
 		var columns = ["id","username","salt","password"]
 		var newrow 	= [id,id,salt,digest]
 
-		db.sInsertRow(dbname,table,columns,newrow)
+		db.sInsertRow(dbfile,table,columns,newrow)
 		.then(data => {
 			console.log("First 'admin' user created")
 		})
@@ -192,10 +190,4 @@ async function setupJson(){
 	}
 }
 
-
-
-
-
-
-
-module.exports = auth ;
+module.exports = auth;

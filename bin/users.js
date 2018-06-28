@@ -25,8 +25,8 @@ var JSONData = require('./jsondata.js');
 var ioData = new JSONData();
 var express = require('express');
 var router = express.Router();
-var db = require('./lib_sqlite.js');
-var File = require("ucipass-file")
+//var db = require('.///sqlite.js');
+
 
 
 //router.get("/", function (req, res) {
