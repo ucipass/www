@@ -4,9 +4,11 @@ var dirApp  = require('app-root-path').path
 var dirHTML = path.join( dirApp , "dist")
 var dirDB   = path.join( dirApp , "db")
 var dirLOG  = path.join( dirApp , "log")
+var dirConf = path.join( dirApp , "config")
 if (!fs.existsSync(dirHTML)){ fs.mkdirSync(dirHTML);}
 if (!fs.existsSync(dirDB)){ fs.mkdirSync(dirDB);}
 if (!fs.existsSync(dirLOG)){ fs.mkdirSync(dirLOG);}
+if (!fs.existsSync(dirConf)){ fs.mkdirSync(dirConf); fs.copyFileSync( path.join(__dirname,"config","default.json"), path.join(dirApp,"config","default.json")) }
 var express = require('express')		// Express.js
 var favicon = require('serve-favicon');
 var app     = require('./bin/www.js').app		// Express.js App
