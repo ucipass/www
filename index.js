@@ -1,4 +1,4 @@
-var fs      = require("fs") //MARKER FOR MODERN BRANCH 2
+var fs      = require("fs") //MARKER FOR MODERN BRANCH 3
 var path    = require("path") 
 var dirApp  = require('app-root-path').path
 var dirHTML = path.join( dirApp , "dist")
