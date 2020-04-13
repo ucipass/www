@@ -6,6 +6,6 @@ module.exports = {
   
     },  
   
-    outputDir: "dist" // Build directory 
+    outputDir: "../backend/dist" // Build directory 
   
   } 

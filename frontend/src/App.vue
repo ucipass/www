@@ -38,7 +38,7 @@ export default {
     if( loginCheck.data) {
       this.status.loggedIn = true
     }else{
-      this.$router.push('Home')
+      this.$router.push('/')
     }    
     eventBus.$on('loginEvent', (data) => {
       console.log("App: received loginEvent:",data)
