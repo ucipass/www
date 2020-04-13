@@ -38,7 +38,9 @@ export default {
     if( loginCheck.data) {
       this.status.loggedIn = true
     }else{
-      this.$router.push('/')
+      console.log(this.$router.history.current.name)
+      if (this.$router.history.current.name != "Home") this.$router.push('/')
+      
     }    
     eventBus.$on('loginEvent', (data) => {
       console.log("App: received loginEvent:",data)
@@ -47,7 +49,8 @@ export default {
     eventBus.$on('logoutEvent', () => {
       console.log("App: received logoutEvent:")
       this.status.loggedIn = false
-      this.$router.push('/')
+      console.log(this.$router.history.current.name)
+      if (this.$router.history.current.name != "Home") this.$router.push('/')
     })
   }    
 }
