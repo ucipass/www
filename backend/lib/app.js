@@ -6,6 +6,7 @@ const session = require('express-session');
 const mongoose = require('mongoose')
 const MongoStore = require('connect-mongo')(session);
 let cors = require('cors') // ONLY FOR DEVELOPMENT!!!
+const history = require('connect-history-api-fallback');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const mongooseConnection  =  require("../lib/mongooseclient.js")()
@@ -22,7 +23,10 @@ const PREFIX          = process.env.PREFIX ? path.posix.join("/",process.env.PRE
 const PREFIX_LOGIN    = path.posix.join("/",PREFIX, "login")
 const PREFIX_LOGOUT   = path.posix.join("/",PREFIX, "logout")
 const PREFIX_DOWNLOAD = path.posix.join("/",PREFIX, "download")
-
+const URL_USERS_CREATE= path.posix.join("/",PREFIX,"users", "create")
+const URL_USERS_READ  = path.posix.join("/",PREFIX,"users", "read")
+const URL_USERS_UPDATE= path.posix.join("/",PREFIX,"users", "update")
+const URL_USERS_DELETE= path.posix.join("/",PREFIX,"users", "delete")
 
 mongoose.set('useCreateIndex', true);
 const DATABASE_URL      = process.env.DATABASE_URL
@@ -81,7 +85,7 @@ passport.use(new LocalStrategy(function(username, password, done) {  // THIS MUS
   //   expiration: { type: Date, required: true, default: Date.now },
   // });
   // const Webuser = mongooseConnection.model( "Webuser", WebuserSchema)
-  mongooseConnection.getWebuser(username)
+  mongooseConnection.getUser(username)
   .then((user)=>{
     if( username == user.username  && password == user.password){
       return done(null, {id:username});	// PASSPORT puts this in the user object for serialization
@@ -118,22 +122,62 @@ passport.checkLogin = function(req, res, next) {
   }
 	
 	res.json(false);
-	//res.redirect(PREFIX_LOGIN)
+	// res.redirect(PREFIX_LOGIN)
 	}
+
+  app.use(history());
+//=================================================
+//  WEB USERS
+//=================================================
+
+app.post(URL_USERS_CREATE, passport.checkLogin, async (req, res) => {
+  let user = req.body
+  mongooseConnection.createUser(user)
+  .then((response)=> res.json("success"))  
+  .catch((error)=> res.json(error))  
+  
+})
+
+app.post(URL_USERS_READ, passport.checkLogin, async (req, res) => {
+  let users = await mongooseConnection.getUsers().catch(()=>{[]})  
+  res.json(users)
+})
+
+app.post(URL_USERS_DELETE, passport.checkLogin, async (req, res) => {
+  let users = req.body
+  mongooseConnection.deleteUser(users)
+  .then((response)=> {
+    res.json("success")
+  })  
+  .catch((error)=> {
+    res.json(error)
+  })  
+})
+
+app.post(URL_USERS_UPDATE, passport.checkLogin, async (req, res) => {
+  let user = req.body
+  mongooseConnection.updateUser(user)
+  .then((response)=> {
+    res.json("success")
+  })  
+  .catch((error)=> {
+    res.json(error)
+  })  
+})
 
 
 //=================================================
 //  LOGIN & LOGOUT
 //=================================================
-
-app.use( PREFIX ,express.static( path.join(__dirname,'gui/dist') ))
-app.use( PREFIX_DOWNLOAD ,express.static('download'))
+let mypath = path.join(__dirname, "../dist")
+app.use( "/", express.static(  mypath ))
+app.use( "/users", express.static(  mypath ))
 // app.use( "/clients" ,express.static('clients'), serveIndex('clients', {'icons': true}))
 log.info("Listening path:", PREFIX)
 
-app.get('/', (req, res) => {
-    res.send('Socket Manager')
-})
+// app.get('/', (req, res) => {
+//     res.send('Socket Manager')
+// })
 
 app.get('/favicon.ico', (req, res) => res.status(204));
 
@@ -189,6 +233,18 @@ app.get(PREFIX_LOGIN, passport.checkLogin, (req,res) => {
 //=================================================
 //  ERROR HANDLER
 //=================================================
+app.use(function(req, res, next) {
+	var message ="<p>Invalid URL! Your session is being logged! Unauthorized access to this site is strictly prohibited!</p>"
+	message += "<p>"+req.clientIp+"</p>"	
+	res.status(404).send(message);
+	if (req.method == "POST") {
+		let data = null
+		if (req.body && req.body.data){ data = req.body.data }
+		console.log(req.method,'from:',req.clientIp,"INVALID JSON:",req.url,"DATA:", data ? data : "invalid JSON.data");
+	}else{
+		console.log(req.method,'from:',req.clientIp,"INVALID URL:",req.url);
+	}
+});
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

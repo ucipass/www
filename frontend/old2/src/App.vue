@@ -12,9 +12,6 @@
 import NavBarMain from '@/components/NavBarMain.vue'
 import ModalLogin from '@/components/ModalLogin.vue'
 import { eventBus } from '@/components/events.js' ;
-import axios from 'axios';
-import { URL_USERS_READ } from '@/components/constants.js';
-
 
 export default {
   name: 'App',
@@ -34,12 +31,6 @@ export default {
   },
   mounted: async function () {
     console.log("App: Mounted")
-    let loginCheck = await axios.post(URL_USERS_READ)
-    if( loginCheck.data) {
-      this.status.loggedIn = true
-    }else{
-      this.$router.push('Home')
-    }    
     eventBus.$on('loginEvent', (data) => {
       console.log("App: received loginEvent:",data)
       this.status.loggedIn = data.loggedIn
@@ -47,7 +38,6 @@ export default {
     eventBus.$on('logoutEvent', () => {
       console.log("App: received logoutEvent:")
       this.status.loggedIn = false
-      this.$router.push('/')
     })
   }    
 }

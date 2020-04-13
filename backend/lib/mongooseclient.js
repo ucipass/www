@@ -7,9 +7,9 @@ const DATABASE_URL      = process.env.DATABASE_URL ? process.env.DATABASE_URL : 
 const DATABASE_USERNAME = process.env.DATABASE_USERNAME ? process.env.DATABASE_USERNAME : "admin"
 const DATABASE_PASSWORD = process.env.DATABASE_PASSWORD ? process.env.DATABASE_USERNAME : "admin"
 
-const CollectionWebusers = 'Webusers'
+const CollectionUsers = 'Users'
 
-const WebuserSchema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     expiration: { type: Date, required: true, default: Date.now },
@@ -30,13 +30,13 @@ let options ={
 // CHECK IF ADMIN USER EXISTS IF NOT CREATE admin/admin
 async function adminUserCheck(){
     const connection  = mongoose.createConnection( DATABASE_URL, options);
-    const Webuser = connection.model( CollectionWebusers, WebuserSchema)
-    Webuser.findOne({ "username" : "admin" })
+    const User = connection.model( CollectionUsers, UserSchema)
+    User.findOne({ "username" : "admin" })
     .then((user)=>{
         if(user){
             return true
         }else{
-            let doc = new Webuser ({username: "admin", password: "admin"})
+            let doc = new User ({username: "admin", password: "admin"})
             log.info("Creating new admin user account!")
             return doc.save()  
         }
@@ -53,33 +53,38 @@ adminUserCheck()
 module.exports = function(){
     log.info("Connecting to:", DATABASE_URL)
     const connection  = mongoose.createConnection( DATABASE_URL, options);
-    const Webuser = connection.model( CollectionWebusers, WebuserSchema)
+    const User = connection.model( CollectionUsers, UserSchema)
 
-
-
-    connection.getWebuser = async (username)=>{
-        let reply = await Webuser.findOne({ "username" : username})  
+    connection.getUser = async (username)=>{
+        let json = await User.findOne({ "username" : username}).lean(true)
+        delete json._id
+        delete json.__v  
+        return json       
+    }
+    connection.getUsers = async ()=>{
+        let reply = await User.find({}).lean(true)
+        reply = reply.map(json => {
+            delete json._id
+            delete json.__v
+            return json
+        })
         return reply       
     }
-    connection.getWebusers = async ()=>{
-        let reply = await Webuser.find({})  
-        return reply       
-    }
-    connection.deleteWebuser = async (username)=>{
+    connection.deleteUser = async (username)=>{
         if(username && username.username){
-            return Webuser.deleteOne({ username : username.username}) 
+            return User.deleteOne({ username : username.username}) 
         }
         else{
-            return Webuser.deleteOne({ username : username}) 
+            return User.deleteOne({ username : username}) 
         }
                         
     }
-    connection.updateWebuser = async (webuser)=>{
-        var query = { username: webuser.username };
-        let newclientobj = await Webuser.findOneAndUpdate(query, webuser)
+    connection.updateUser = async (user)=>{
+        var query = { username: user.username };
+        let newclientobj = await User.findOneAndUpdate(query, user)
         return newclientobj;            
     }
-    connection.createWebuser = async (username,password)=>{
+    connection.createUser = async (username,password)=>{
         return new Promise((resolve, reject) => {
             require('crypto').randomBytes(24, function(err, buffer) {
                 if(err){
@@ -91,11 +96,11 @@ module.exports = function(){
         })
         .then((token)=>{
             if(username && username.username){
-                let doc = new Webuser (username)
+                let doc = new User (username)
                 return doc.save()              
                 }
             else{
-                let doc = new Webuser ({username: username, password: password})
+                let doc = new User ({username: username, password: password})
                 return doc.save()
                 }            
         })                
