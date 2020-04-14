@@ -3,9 +3,8 @@ const app = express();
 const createError = require('http-errors');
 const path = require('path')
 const session = require('express-session');
-const mongoose = require('mongoose')
 const MongoStore = require('connect-mongo')(session);
-let cors = require('cors') // ONLY FOR DEVELOPMENT!!!
+const cors = require('cors') // ONLY FOR DEVELOPMENT!!!
 const history = require('connect-history-api-fallback');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
@@ -28,20 +27,6 @@ const URL_USERS_READ  = path.posix.join("/",PREFIX,"users", "read")
 const URL_USERS_UPDATE= path.posix.join("/",PREFIX,"users", "update")
 const URL_USERS_DELETE= path.posix.join("/",PREFIX,"users", "delete")
 
-mongoose.set('useCreateIndex', true);
-const DATABASE_URL      = process.env.DATABASE_URL
-const DATABASE_USERNAME = process.env.DATABASE_USERNAME
-const DATABASE_PASSWORD = process.env.DATABASE_PASSWORD
-
-let options ={
-  useUnifiedTopology: true,
-  useNewUrlParser: true,
-  user: DATABASE_USERNAME,
-  pass: DATABASE_PASSWORD,                  
-  auth:{
-      authSource: 'admin'                    
-  }
-}
 
 app.use(cors({origin:true,credentials: true}));; //PLEASE REMOVE FOR PRODUCTION
 app.use(session({
