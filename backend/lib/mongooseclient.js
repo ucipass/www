@@ -31,7 +31,8 @@ let options ={
 async function adminUserCheck(){
     const connection  = mongoose.createConnection( DATABASE_URL, options);
     const User = connection.model( CollectionUsers, UserSchema)
-    User.findOne({ "username" : "admin" })
+    connection
+    .then(()=> User.findOne({ "username" : "admin" }))
     .then((user)=>{
         if(user){
             return true
@@ -45,7 +46,7 @@ async function adminUserCheck(){
         return connection.close()
     })
     .catch((error)=>{
-        log.error("Mongo DB error with admin user id",error)
+        log.error("adminUserCheck error:",error.message)
     })    
 }
 adminUserCheck()

@@ -1,0 +1,43 @@
+version: '3.7'
+x-LOG_LEVEL         : &LOG_LEVEL LOG_LEVEL=info
+x-NODE_ENV          : &NODE_ENV NODE_ENV=production
+x-PREFIX            : &PREFIX PREFIX=
+x-DATABASE_URL      : &DATABASE_URL DATABASE_URL=mongodb://wwwmongo:27017
+x-DATABASE_USERNAME : &DATABASE_USERNAME DATABASE_USERNAME=admin
+x-DATABASE_PASSWORD : &DATABASE_PASSWORD DATABASE_PASSWORD=admin
+services:
+  www:
+    build:
+      dockerfile: Dockerfile
+      context: ./    
+    container_name: "www" 
+    # build:
+    #   context: ..
+    #   dockerfile: sioserver.Dockerfile    
+    image: ucipass/www
+    environment: 
+      - *LOG_LEVEL
+      - *NODE_ENV
+      - *PREFIX
+      - *DATABASE_URL
+      - *DATABASE_USERNAME
+      - *DATABASE_PASSWORD
+    command: node index.js
+    ports: 
+      - 3001:3001
+    links: 
+      - wwwmongo 
+    depends_on: 
+      - wwwmongo       
+  wwwmongo: 
+    container_name: "wwwmongo" 
+    image: mongo:latest 
+    volumes: 
+      - /tmp/db:/data/db 
+    ports: 
+      - 27017:27017 
+    command: --logpath /dev/null
+    # restart: unless-stopped
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin 
+      - MONGO_INITDB_ROOT_PASSWORD=admin
