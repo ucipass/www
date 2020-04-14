@@ -8,12 +8,9 @@ x-DATABASE_PASSWORD : &DATABASE_PASSWORD DATABASE_PASSWORD=admin
 services:
   www:
     build:
-      dockerfile: Dockerfile
       context: ./    
+      dockerfile: Dockerfile
     container_name: "www" 
-    # build:
-    #   context: ..
-    #   dockerfile: sioserver.Dockerfile    
     image: ucipass/www
     environment: 
       - *LOG_LEVEL
