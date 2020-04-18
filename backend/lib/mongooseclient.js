@@ -6,6 +6,7 @@ mongoose.set('useCreateIndex', true);
 const DATABASE_URL      = process.env.DATABASE_URL ? process.env.DATABASE_URL : "mongodb://localhost:27017/rp"
 const DATABASE_USERNAME = process.env.DATABASE_USERNAME ? process.env.DATABASE_USERNAME : "admin"
 const DATABASE_PASSWORD = process.env.DATABASE_PASSWORD ? process.env.DATABASE_USERNAME : "admin"
+log.info("path:", DATABASE_URL)
 
 const CollectionUsers = 'Users'
 
@@ -18,6 +19,7 @@ const UserSchema = new mongoose.Schema({
 
 let options ={
     useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 3000,
     useNewUrlParser: true,
     useFindAndModify: false,
     user: DATABASE_USERNAME,
@@ -27,46 +29,23 @@ let options ={
     }
 }
 
-// CHECK IF ADMIN USER EXISTS IF NOT CREATE admin/admin
-async function adminUserCheck(){
-    const connection  = mongoose.createConnection( DATABASE_URL, options);
-    const User = connection.model( CollectionUsers, UserSchema)
-    connection
-    .then(()=> User.findOne({ "username" : "admin" }))
-    .then((user)=>{
-        if(user){
-            return true
-        }else{
-            let doc = new User ({username: "admin", password: "admin"})
-            log.info("Creating new admin user account!")
-            return doc.save()  
-        }
-    })
-    .then(()=>{
-        return connection.close()
-    })
-    .catch((error)=>{
-        log.error("adminUserCheck error:",error.message)
-    })    
-}
-adminUserCheck()
 
 module.exports = function(){
-    log.info("Connecting to:", DATABASE_URL)
-    const connection  = mongoose.createConnection( DATABASE_URL, options);
+    log.debug("Connecting to:", DATABASE_URL)
+    const connection  = mongoose.createConnection( DATABASE_URL, options)
     const User = connection.model( CollectionUsers, UserSchema)
 
     connection.getUser = async (username)=>{
         let json = await User.findOne({ "username" : username}).lean(true)
-        delete json._id
-        delete json.__v  
+        if(json) delete json._id
+        if(json) delete json.__v  
         return json       
     }
     connection.getUsers = async ()=>{
         let reply = await User.find({}).lean(true)
         reply = reply.map(json => {
-            delete json._id
-            delete json.__v
+            if(json) delete json._id
+            if(json) delete json.__v
             return json
         })
         return reply       

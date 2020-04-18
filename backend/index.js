@@ -1,18 +1,10 @@
-const dbclient = require("./lib/mongooseclient.js")
-new Promise( async (resolve, reject) => {
-    setTimeout( ()=> {
-        return(reject(new Error("db connect timeout")))
-    }, 1000)
-    return dbclient()
-    .then(resolve)
-    .catch(error => {
-        reject(error)
-    })
-})
+const httpserver = require("./lib/httpserver.js")
+const setup = require("./lib/setup.js")
+
+setup()
 .then(()=> { 
-    const app = require("./lib/app.js")
-    const httpserver = require("./lib/httpserver.js")
     const port = 3001
+    const app = require("./lib/app.js")    
     const server = new httpserver( {app:app, port:port})   
     return server.start()
 })

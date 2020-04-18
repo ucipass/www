@@ -1,3 +1,5 @@
+var log = require("ucipass-logger")("app")
+log.transports.console.level = process.env.LOG_LEVEL ? process.env.LOG_LEVEL : "debug"
 const express = require('express');
 const app = express();
 const createError = require('http-errors');
@@ -10,11 +12,6 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const mongooseConnection  =  require("../lib/mongooseclient.js")()
 app.mongooseConnection = mongooseConnection // For mocha test to close
-
-// // LOGGING
-
-var log = require("ucipass-logger")("app")
-log.transports.console.level = process.env.LOG_LEVEL ? process.env.LOG_LEVEL : "info"
 
 const TESTING = process.env.NODE_ENV == "testing" ? true : false 
 const SECRET_KEY      = process.env.SECRET_KEY ? process.env.SECRET_KEY : "InsecureRandomSessionKey"
@@ -64,12 +61,6 @@ app.use(passport.session());
 
 passport.use(new LocalStrategy(function(username, password, done) {  // THIS MUST come from POST on body.username and body.passport
 
-  // const WebuserSchema = new mongoose.Schema({
-  //   username: { type: String, required: true, unique: true },
-  //   password: { type: String, required: true },
-  //   expiration: { type: Date, required: true, default: Date.now },
-  // });
-  // const Webuser = mongooseConnection.model( "Webuser", WebuserSchema)
   mongooseConnection.getUser(username)
   .then((user)=>{
     if( username == user.username  && password == user.password){
@@ -82,9 +73,6 @@ passport.use(new LocalStrategy(function(username, password, done) {  // THIS MUS
   .catch((err)=>{
     return done(null, false);
   })    
-
-
-
 
 }))
 
