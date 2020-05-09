@@ -13,5 +13,5 @@ jobs:
       run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
     - name: Docker Build & Publish
       run: |
-        docker build -f Dockerfile -t ucipass/openconnect .
+        docker build -f Dockerfile  -t ucipass/openconnect .
         docker push ucipass/openconnect
