@@ -13,7 +13,7 @@ import NavBarMain from '@/components/NavBarMain.vue'
 import ModalLogin from '@/components/ModalLogin.vue'
 import { eventBus } from '@/components/events.js' ;
 import axios from 'axios';
-import { URL_USERS_READ } from '@/components/constants.js';
+import {URL_LOGIN } from '@/components/constants.js';
 
 
 export default {
@@ -34,14 +34,25 @@ export default {
   },
   mounted: async function () {
     console.log("App: Mounted")
-    let loginCheck = await axios.post(URL_USERS_READ)
-    if( loginCheck.data) {
-      this.status.loggedIn = true
-    }else{
-      console.log(this.$router.history.current.name)
-      if (this.$router.history.current.name != "Home") this.$router.push('/')
-      
-    }    
+    let loginCheck = await axios.get(URL_LOGIN).catch(()=> {
+      console.log(`Application server is not available at ${URL_LOGIN} !`)
+      return {data: "errorapp"}
+    })
+
+    switch ( loginCheck.data ){
+      case "success":
+        this.status.loggedIn = true;
+        this.$router.push({ path: "/"})
+        break;
+      case "errorapp":
+        this.$router.push({ path: "ErrorApp"})
+        break;
+      default:
+        // STILL HAVE TO WORK ON THIS!!!!
+        console.log(`Login: ${loginCheck.data}` )
+        if (this.$router.history.current.name != "Home") this.$router.push('/')
+    }
+
     eventBus.$on('loginEvent', (data) => {
       console.log("App: received loginEvent:",data)
       this.status.loggedIn = data.loggedIn

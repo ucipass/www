@@ -6,12 +6,26 @@ x-DATABASE_URL      : &DATABASE_URL DATABASE_URL=mongodb://wwwmongo:27017
 x-DATABASE_USERNAME : &DATABASE_USERNAME DATABASE_USERNAME=admin
 x-DATABASE_PASSWORD : &DATABASE_PASSWORD DATABASE_PASSWORD=admin
 services:
+  # FRONTEND VUE JS + NGINX
   www:
     build:
       context: ./    
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile_frontend
     container_name: "www" 
     image: ucipass/www
+    volumes: 
+      - /home/aarato/github/www/frontend/dist:/usr/share/nginx/html
+    ports: 
+      - 8080:80    
+    depends_on: 
+      - wwwap 
+  # BACKEND NODE JS APP    
+  wwwap:
+    build:
+      context: ./    
+      dockerfile: Dockerfile_backend
+    container_name: "wwwap" 
+    image: ucipass/wwwap
     environment: 
       - *LOG_LEVEL
       - *NODE_ENV
@@ -21,11 +35,12 @@ services:
       - *DATABASE_PASSWORD
     command: node index.js
     ports: 
-      - 3001:3001
+      - 3000:3000
     links: 
       - wwwmongo 
     depends_on: 
-      - wwwmongo       
+      - wwwmongo
+  # MONGODB BACKEND DATABASE
   wwwmongo: 
     container_name: "wwwmongo" 
     image: mongo:latest 
