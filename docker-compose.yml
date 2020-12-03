@@ -6,6 +6,7 @@ x-DATABASE_URL      : &DATABASE_URL DATABASE_URL=mongodb://wwwmongo:27017
 x-DATABASE_USERNAME : &DATABASE_USERNAME DATABASE_USERNAME=admin
 x-DATABASE_PASSWORD : &DATABASE_PASSWORD DATABASE_PASSWORD=admin
 services:
+
   # FRONTEND VUE JS + NGINX
   www:
     build:
@@ -13,12 +14,14 @@ services:
       dockerfile: Dockerfile_frontend
     container_name: "www" 
     image: ucipass/www
-    volumes: 
-      - /home/aarato/github/www/frontend/dist:/usr/share/nginx/html
+    environment: 
+      - PROXY_HOST=wwwap
+      - PROXY_PORT=3000
     ports: 
       - 8080:80    
     depends_on: 
       - wwwap 
+
   # BACKEND NODE JS APP    
   wwwap:
     build:
@@ -40,6 +43,7 @@ services:
       - wwwmongo 
     depends_on: 
       - wwwmongo
+
   # MONGODB BACKEND DATABASE
   wwwmongo: 
     container_name: "wwwmongo" 

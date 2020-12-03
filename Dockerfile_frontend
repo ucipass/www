@@ -11,5 +11,7 @@ RUN npm run build
 
 FROM nginx:latest
 WORKDIR /source/rp
-COPY ./frontend/nginx.conf  /etc/nginx/conf.d/default.conf
+ENV PROXY_HOST=localhost
+ENV PROXY_PORT=3000
+COPY ./frontend/nginx.conf.template  /etc/nginx/templates/default.conf.template
 COPY --from=frontend-stage /source/rp/dist /usr/share/nginx/html
